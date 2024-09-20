@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    ferrum_pdf (0.1.0)
+    ferrum_pdf (0.1.1)
       ferrum (~> 0.15)
-      rails (>= 7.2.1)
+      rails (>= 6.0.0)
 
 GEM
   remote: https://rubygems.org/
