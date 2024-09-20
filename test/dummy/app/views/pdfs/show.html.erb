@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice with Images and External CSS</title>
+    <!-- External CSS link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <%= stylesheet_link_tag "application" %>
+</head>
+<body>
+    <div class="invoice-container">
+        <div class="invoice-header">
+            <!-- Embedded image example -->
+            <img src="https://placehold.co/200x100" alt="Company Logo" class="logo">
+            <h1>Invoice</h1>
+        </div>
+        <div class="invoice-details">
+            <div>
+                <p><strong>From:</strong> Your Company Name</p>
+                <p>123 Your Street</p>
+                <p>Your City, State ZIP</p>
+                <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+            </div>
+            <div>
+                <p><strong>To:</strong> Client Name</p>
+                <p>456 Client Street</p>
+                <p>Client City, State ZIP</p>
+                <p><i class="fas fa-envelope"></i> client@example.com</p>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Item 1</td>
+                    <td>2</td>
+                    <td>$50.00</td>
+                    <td>$100.00</td>
+                </tr>
+                <tr>
+                    <td>Item 2</td>
+                    <td>1</td>
+                    <td>$75.00</td>
+                    <td>$75.00</td>
+                </tr>
+                <tr>
+                    <td>Item 3</td>
+                    <td>3</td>
+                    <td>$25.00</td>
+                    <td>$75.00</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="total">
+            <p><strong>Subtotal:</strong> $250.00</p>
+            <p><strong>Tax (10%):</strong> $25.00</p>
+            <p><strong>Total:</strong> $275.00</p>
+        </div>
+        <div class="footer">
+            <p>Thank you for your business!</p>
+            <!-- Another embedded image example -->
+            <img src="https://placehold.co/100x50" alt="Payment Methods" style="max-width: 200px;">
+        </div>
+    </div>
+</body>
+</html>

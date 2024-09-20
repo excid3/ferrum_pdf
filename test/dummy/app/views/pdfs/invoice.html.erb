@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .invoice-container {
+            width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .invoice-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .total {
+            text-align: right;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <div class="invoice-header">
+            <h1>Invoice</h1>
+        </div>
+        <div class="invoice-details">
+            <div>
+                <p><strong>From:</strong> Your Company Name</p>
+                <p>123 Your Street</p>
+                <p>Your City, State ZIP</p>
+                <p>Phone: (123) 456-7890</p>
+            </div>
+            <div>
+                <p><strong>To:</strong> Client Name</p>
+                <p>456 Client Street</p>
+                <p>Client City, State ZIP</p>
+                <p>Phone: (987) 654-3210</p>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Item 1</td>
+                    <td>2</td>
+                    <td>$50.00</td>
+                    <td>$100.00</td>
+                </tr>
+                <tr>
+                    <td>Item 2</td>
+                    <td>1</td>
+                    <td>$75.00</td>
+                    <td>$75.00</td>
+                </tr>
+                <tr>
+                    <td>Item 3</td>
+                    <td>3</td>
+                    <td>$25.00</td>
+                    <td>$75.00</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="total">
+            <p><strong>Subtotal:</strong> $250.00</p>
+            <p><strong>Tax (10%):</strong> $25.00</p>
+            <p><strong>Total:</strong> $275.00</p>
+        </div>
+    </div>
+</body>
+</html>
