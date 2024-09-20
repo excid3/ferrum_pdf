@@ -129,6 +129,8 @@ GEM
     nio4r (2.7.3)
     nokogiri (1.16.7-x86_64-darwin)
       racc (~> 1.4)
+    nokogiri (1.16.7-x86_64-linux)
+      racc (~> 1.4)
     parallel (1.26.3)
     parser (3.3.5.0)
       ast (~> 2.4.1)
@@ -218,7 +220,6 @@ GEM
       rubocop-rails
     ruby-progressbar (1.13.0)
     securerandom (0.3.1)
-    sqlite3 (2.0.4-x86_64-darwin)
     stringio (3.1.1)
     thor (1.3.2)
     timeout (0.4.1)
@@ -234,13 +235,13 @@ GEM
 
 PLATFORMS
   x86_64-darwin
+  x86_64-linux
 
 DEPENDENCIES
   ferrum_pdf!
   propshaft
   puma
   rubocop-rails-omakase
-  sqlite3
 
 BUNDLED WITH
    2.5.18
