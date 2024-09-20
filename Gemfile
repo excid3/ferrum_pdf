@@ -5,6 +5,7 @@ gemspec
 
 gem "puma"
 gem "propshaft"
+gem "sqlite3"
 
 # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
 gem "rubocop-rails-omakase", require: false
