@@ -51,7 +51,7 @@ module FerrumPdf
   module Controller
     extend ActiveSupport::Concern
 
-    def render_pdf(name = action_name, formats: [:html])
+    def render_pdf(name = action_name, formats: [ :html ])
       content = render_to_string(name, formats: formats)
 
       FerrumPdf.render_pdf(
