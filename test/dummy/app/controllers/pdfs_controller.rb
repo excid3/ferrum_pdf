@@ -27,7 +27,7 @@ class PdfsController < ApplicationController
         send_data pdf, disposition: :inline, filename: "example.pdf"
       }
       format.png {
-        screenshot = FerrumPdf.render_screenshot(url: params[:url], screenshot_options: {full: params[:full]})
+        screenshot = FerrumPdf.render_screenshot(url: params[:url], screenshot_options: { full: params[:full] })
         send_data screenshot, disposition: :inline, filename: "example.png"
       }
     end
