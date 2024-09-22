@@ -1,0 +1,27 @@
+<h1>FerrumPdf Examples</h1>
+
+<h3> From Rails</h3>
+<div>
+  <%= link_to "HTML", pdf_path(1) %>
+</div>
+
+<div>
+  <%= link_to "PDF", pdf_path(1, format: :pdf) %>
+</div>
+
+<div>
+  <%= link_to "PNG", pdf_path(1, format: :png) %>
+</div>
+
+<h3>From URL</h3>
+<h4>PDF</h4>
+<%= form_with url: url_pdfs_path(format: :pdf), method: :get do |form| %>
+  <%= form.url_field :url, value: "https://example.org" %>
+  <%= form.submit %>
+<% end %>
+
+<h4>PNG</h4>
+<%= form_with url: url_pdfs_path(format: :png), method: :get do |form| %>
+  <%= form.url_field :url, value: "https://example.org" %>
+  <%= form.submit %>
+<% end %>

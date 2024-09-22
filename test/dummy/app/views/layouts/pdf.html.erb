@@ -6,11 +6,7 @@
     <title><%= content_for(:title) || "Dummy" %></title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <%= stylesheet_link_tag "application" %>
-
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-    <%= yield :head %>
+    <%= stylesheet_link_tag "print" %>
   </head>
   <body>
     <%= yield %>

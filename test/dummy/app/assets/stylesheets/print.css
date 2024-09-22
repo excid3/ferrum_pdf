@@ -1,0 +1,44 @@
+/* Application styles */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f4f4f4;
+  width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+}
+.invoice-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.logo {
+  max-width: 200px;
+  height: auto;
+}
+.invoice-details {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+th {
+  background-color: #f2f2f2;
+}
+.total {
+  text-align: right;
+  margin-top: 20px;
+}
+.footer {
+  margin-top: 30px;
+  text-align: center;
+  color: #777;
+}

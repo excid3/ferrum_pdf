@@ -6,8 +6,8 @@ Gem::Specification.new do |spec|
   spec.authors     = [ "Chris Oliver" ]
   spec.email       = [ "excid3@gmail.com" ]
   spec.homepage    = "https://github.com/excid3/ferrum_pdf"
-  spec.summary     = "PDFs for Rails using Ferrum & headless Chrome"
-  spec.description = "Export PDFs from HTML in Rails using Ferrum & headless Chrome"
+  spec.summary     = "PDFs & screenshots for Rails using Ferrum & headless Chrome"
+  spec.description = "Export PDFs & screenshots from HTML in Rails using Ferrum & headless Chrome"
   spec.license     = "MIT"
 
   spec.metadata["homepage_uri"] = spec.homepage

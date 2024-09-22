@@ -1,5 +1,10 @@
 ### Unreleased
 
+### 0.3.0
+
+* Add `FerrumPdf.include_controller_module = false` option to skip adding `render_pdf` Rails helper
+* Add `render_screenshot`
+
 ### 0.2.0
 
 * Add support for `pdf_options`
