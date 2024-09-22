@@ -10,6 +10,9 @@ module FerrumPdf
     <div class='text right'><span class='pageNumber'></span>/<span class='totalPages'></span></div>
   HTML
 
+  mattr_accessor :include_controller_module
+  @@include_controller_module = true
+
   def self.browser(**options)
     @browser ||= Ferrum::Browser.new(options)
   end
