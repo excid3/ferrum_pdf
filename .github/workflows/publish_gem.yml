@@ -35,7 +35,7 @@ jobs:
           bundle
           git config user.name 'GitHub Actions'
           git config user.email github-actions@github.com
-          git add Gemfile.lock gemfiles lib
+          git add Gemfile.lock lib
           git commit -m "Version bump"
           git push
 
