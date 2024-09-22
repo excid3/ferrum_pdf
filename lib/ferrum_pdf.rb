@@ -4,22 +4,25 @@ require "ferrum_pdf/railtie"
 require "ferrum"
 
 module FerrumPdf
+  DEFAULT_HEADER_TEMPLATE = "<div class='date text left'></div><div class='title text center'></div>"
+  DEFAULT_FOOTER_TEMPLATE = <<~HTML
+    <div class='url text left grow'></div>
+    <div class='text right'><span class='pageNumber'></span>/<span class='totalPages'></span></div>
+  HTML
+
   def self.browser(**options)
     @browser ||= Ferrum::Browser.new(options)
   end
 
-  def self.render_pdf(host:, protocol:, html: nil, url: nil)
-    Tempfile.create do |file|
-      browser.create_page do |page|
-        if html
-          page.content = FerrumPdf::HTMLPreprocessor.process(html, host, protocol)
-          page.network.wait_for_idle
-        else
-          page.go_to(url)
-        end
-        page.pdf(path: file.path)
-        file.read
+  def self.render_pdf(host:, protocol:, html: nil, url: nil, pdf_options: {})
+    browser.create_page do |page|
+      if html
+        page.content = FerrumPdf::HTMLPreprocessor.process(html, host, protocol)
+        page.network.wait_for_idle
+      else
+        page.go_to(url)
       end
+      page.pdf(**pdf_options.with_defaults(encoding: :binary))
     end
   end
 
@@ -51,13 +54,14 @@ module FerrumPdf
   module Controller
     extend ActiveSupport::Concern
 
-    def render_pdf(name = action_name, formats: [ :html ])
+    def render_pdf(name = action_name, formats: [ :html ], pdf_options: {})
       content = render_to_string(name, formats: formats)
 
       FerrumPdf.render_pdf(
         html: content,
         host: request.host_with_port,
-        protocol: request.protocol
+        protocol: request.protocol,
+        pdf_options: pdf_options
       )
     end
   end
