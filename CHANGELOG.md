@@ -1,5 +1,11 @@
 ### Unreleased
 
+### 0.2.0
+
+* Add support for `pdf_options`
+* Add example for displaying header and footer
+* Drop need for tempfile
+
 ### 0.1.1
 
 * Relax Rails version requirements

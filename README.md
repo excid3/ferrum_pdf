@@ -28,10 +28,20 @@ end
 You can also customize which template is rendered:
 
 ```ruby
-render_pdf(name = action_name, formats: [ :html ])
+render_pdf(name = action_name, formats: [ :html ], pdf_options: {})
 ```
 
-This will render the template to string, then pass it along to FerrumPdf.
+This will render the template to string with `render_to_string` in Rails, then pass it along to FerrumPdf.
+
+For example, you can add headers and footers using `pdf_options`
+
+```ruby
+render_pdf(pdf_options: {
+  display_header_footer: true,
+  header_template: FerrumPdf::DEFAULT_HEADER_TEMPLATE,
+  footer_template: FerrumPdf::DEFAULT_FOOTER_TEMPLATE
+})
+```
 
 ### Directly with HTML
 
@@ -47,9 +57,13 @@ You can also pass host and protocol to convert any relative paths to full URLs. 
 FerrumPdf.render_pdf(
   html: content,
   host: request.host_with_port,
-  protocol: request.protocol
+  protocol: request.protocol,
+  pdf_options: {}
 )
 ```
+
+See Chrome DevTools Protocol docs: https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF
+And Ferrum's `#pdf` docs: https://github.com/rubycdp/ferrum?tab=readme-ov-file#pdfoptions--string--boolean
 
 ## Contributing
 
