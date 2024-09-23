@@ -47,7 +47,7 @@ jobs:
         env:
           RAILS_ENV: test
           # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails test
+        run: bin/test
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v4
