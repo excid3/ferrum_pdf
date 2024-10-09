@@ -12,3 +12,9 @@ if ActiveSupport::TestCase.respond_to?(:fixture_paths=)
   ActiveSupport::TestCase.file_fixture_path = File.expand_path("fixtures", __dir__) + "/files"
   ActiveSupport::TestCase.fixtures :all
 end
+
+class ActiveSupport::TestCase
+  setup do
+    FerrumPdf.reset_configuration!
+  end
+end

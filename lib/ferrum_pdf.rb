@@ -23,6 +23,10 @@ module FerrumPdf
       yield(configuration)
     end
 
+    def reset_configuration!
+      @@configuration = {}
+    end
+
     def browser
       @browser ||= Ferrum::Browser.new(configuration)
     end
