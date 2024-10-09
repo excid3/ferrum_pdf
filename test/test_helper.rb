@@ -15,6 +15,12 @@ end
 
 class ActiveSupport::TestCase
   setup do
-    FerrumPdf.reset_configuration!
+    # Store the original configuration
+    @original_config = FerrumPdf.configuration.dup
+  end
+
+  teardown do
+    # Restore the original configuration after each test
+    FerrumPdf.configuration.replace(@original_config)
   end
 end

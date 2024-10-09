@@ -1,11 +1,7 @@
 require "test_helper"
 
 class FerrumPdf::ConfigurationTest < ActiveSupport::TestCase
-  def setup
-    FerrumPdf.reset_configuration!
-  end
-
-  test "configuration can be set through initializer" do
+  test "configuration can be set through configure method" do
     FerrumPdf.configure do |config|
       config[:headless] = true
       config[:timeout] = 30
@@ -30,7 +26,8 @@ class FerrumPdf::ConfigurationTest < ActiveSupport::TestCase
     assert_equal 45, browser_options.timeout
   end
 
-  test "default configuration is empty" do
-    assert_empty FerrumPdf.configuration
+  test "initializer sets default configuration" do
+    # This test assumes that the initializer in the dummy app sets some default values
+    assert_not_empty FerrumPdf.configuration
   end
 end
