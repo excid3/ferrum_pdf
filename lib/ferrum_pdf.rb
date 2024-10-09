@@ -21,10 +21,12 @@ module FerrumPdf
   class << self
     def configure
       yield(configuration)
+      @browser = nil  # Reset the browser instance when configuration changes
     end
 
     def reset_configuration!
       @@configuration = {}
+      @browser = nil  # Reset the browser instance when configuration is reset
     end
 
     def browser

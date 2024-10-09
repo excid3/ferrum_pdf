@@ -1,6 +1,10 @@
 require "test_helper"
 
 class FerrumPdf::ConfigurationTest < ActiveSupport::TestCase
+  setup do
+    FerrumPdf.reset_configuration!
+  end
+
   test "configuration can be set through configure method" do
     FerrumPdf.configure do |config|
       config[:headless] = true
@@ -21,13 +25,23 @@ class FerrumPdf::ConfigurationTest < ActiveSupport::TestCase
 
     browser = FerrumPdf.browser
     assert_instance_of Ferrum::Browser, browser
-    browser_options = browser.instance_variable_get(:@options)
-    assert_equal false, browser_options.headless
-    assert_equal 45, browser_options.timeout
+    assert_equal false, browser.instance_variable_get(:@options).headless
+    assert_equal 45, browser.instance_variable_get(:@options).timeout
   end
 
-  test "initializer sets default configuration" do
-    # This test assumes that the initializer in the dummy app sets some default values
-    assert_not_empty FerrumPdf.configuration
+  test "changing configuration creates new browser instance" do
+    FerrumPdf.configure do |config|
+      config[:headless] = true
+    end
+    first_browser = FerrumPdf.browser
+
+    FerrumPdf.configure do |config|
+      config[:headless] = false
+    end
+    second_browser = FerrumPdf.browser
+
+    assert_not_equal first_browser.object_id, second_browser.object_id
+    assert_equal true, first_browser.instance_variable_get(:@options).headless
+    assert_equal false, second_browser.instance_variable_get(:@options).headless
   end
 end
