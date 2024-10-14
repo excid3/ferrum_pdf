@@ -8,12 +8,14 @@ class FerrumPdf::ConfigurationTest < ActiveSupport::TestCase
   test "configuration can be set through configure method" do
     FerrumPdf.configure do |config|
       config[:headless] = true
-      config[:timeout] = 30
       config[:window_size] = [ 1024, 768 ]
+      config[:timeout] = 30 # Default timeout for operations
+      config[:process_timeout] = 30 # Time to wait for browser to start
     end
 
     assert_equal true, FerrumPdf.configuration[:headless]
     assert_equal 30, FerrumPdf.configuration[:timeout]
+    assert_equal 30, FerrumPdf.configuration[:process_timeout]
     assert_equal [ 1024, 768 ], FerrumPdf.configuration[:window_size]
   end
 
@@ -21,22 +23,26 @@ class FerrumPdf::ConfigurationTest < ActiveSupport::TestCase
     FerrumPdf.configure do |config|
       config[:headless] = false
       config[:timeout] = 45
+      config[:process_timeout] = 30
     end
 
     browser = FerrumPdf.browser
     assert_instance_of Ferrum::Browser, browser
     assert_equal false, browser.instance_variable_get(:@options).headless
     assert_equal 45, browser.instance_variable_get(:@options).timeout
+    assert_equal 30, browser.instance_variable_get(:@options).process_timeout
   end
 
   test "changing configuration creates new browser instance" do
     FerrumPdf.configure do |config|
       config[:headless] = true
+      config[:process_timeout] = 30
     end
     first_browser = FerrumPdf.browser
 
     FerrumPdf.configure do |config|
       config[:headless] = false
+      config[:process_timeout] = 30
     end
     second_browser = FerrumPdf.browser
 
