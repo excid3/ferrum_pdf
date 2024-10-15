@@ -25,7 +25,7 @@ module FerrumPdf
     end
 
     def reset_configuration!
-      @@configuration = {}
+      @@configuration = ActiveSupport::OrderedOptions.new
       @browser = nil  # Reset the browser instance when configuration is reset
     end
 
