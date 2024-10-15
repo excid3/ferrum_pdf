@@ -14,6 +14,22 @@ Run the following or add the gem to your Gemfile:
 bundle add "ferrum_pdf"
 ```
 
+## Configuration
+
+You can configure FerrumPdf globally using an initializer. Create a file `config/initializers/ferrum_pdf.rb` in your Rails application:
+
+```ruby
+FerrumPdf.configure do |config|
+  config.headless = true
+  config.process_timeout = 30  # Time to wait for browser to start (in seconds)
+  config.timeout = 10          # Default timeout for operations (in seconds)
+  config.window_size = [1280, 800]
+  # Add any other Ferrum options you want to set globally
+end
+```
+
+These options will be used as default settings for all FerrumPdf operations. You can still override these settings on a per-use basis when calling `render_pdf` or `render_screenshot`.
+
 ## Usage
 
 You can use FerrumPdf to render [PDFs](#-pdfs) and [Screenshots](#-screenshots)
