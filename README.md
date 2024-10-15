@@ -20,10 +20,10 @@ You can configure FerrumPdf globally using an initializer. Create a file `config
 
 ```ruby
 FerrumPdf.configure do |config|
-  config[:headless] = true
-  config[:process_timeout] = 30  # Time to wait for browser to start (in seconds)
-  config[:timeout] = 10          # Default timeout for operations (in seconds)
-  config[:window_size] = [1280, 800]
+  config.headless = true
+  config.process_timeout = 30  # Time to wait for browser to start (in seconds)
+  config.timeout = 10          # Default timeout for operations (in seconds)
+  config.window_size = [1280, 800]
   # Add any other Ferrum options you want to set globally
 end
 ```
