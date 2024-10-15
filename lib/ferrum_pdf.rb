@@ -16,7 +16,7 @@ module FerrumPdf
   @@include_controller_module = true
 
   mattr_accessor :configuration
-  @@configuration = {}
+  @@configuration = ActiveSupport::OrderedOptions.new
 
   class << self
     def configure
