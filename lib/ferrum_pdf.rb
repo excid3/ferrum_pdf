@@ -20,20 +20,21 @@ module FerrumPdf
       @browser ||= Ferrum::Browser.new(options)
     end
 
-    def render_pdf(html: nil, url: nil, host: nil, protocol: nil, pdf_options: {})
-      render(host: host, protocol: protocol, html: html, url: url) do |page|
+    def render_pdf(html: nil, url: nil, host: nil, protocol: nil, authorize: nil, pdf_options: {})
+      render(host: host, protocol: protocol, html: html, url: url, authorize: authorize) do |page|
         page.pdf(**pdf_options.with_defaults(encoding: :binary))
       end
     end
 
-    def render_screenshot(html: nil, url: nil, host: nil, protocol: nil, screenshot_options: {})
-      render(host: host, protocol: protocol, html: html, url: url) do |page|
+    def render_screenshot(html: nil, url: nil, host: nil, protocol: nil, authorize: nil, screenshot_options: {})
+      render(host: host, protocol: protocol, html: html, url: url, authorize: authorize) do |page|
         page.screenshot(**screenshot_options.with_defaults(encoding: :binary, full: true))
       end
     end
 
-    def render(host:, protocol:, html: nil, url: nil)
+    def render(host:, protocol:, html: nil, url: nil, authorize: nil)
       browser.create_page do |page|
+        page.network.authorize(user: authorize[:user], password: authorize[:password]) { |req| req.continue } if authorize
         if html
           page.content = FerrumPdf::HTMLPreprocessor.process(html, host, protocol)
           page.network.wait_for_idle
