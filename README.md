@@ -16,7 +16,7 @@ bundle add "ferrum_pdf"
 
 ## Usage
 
-You can use FerrumPdf to render [PDFs](#pdfs) and [Screenshots](#screenshots)
+You can use FerrumPdf to render [PDFs](#-pdfs) and [Screenshots](#-screenshots)
 
 ### 📄 PDFs
 
@@ -71,6 +71,7 @@ FerrumPdf.render_pdf(
   url: "https://example.com", # or provide a URL to the content
   host: request.base_url + "/", # Used for setting the host for relative paths
   protocol: request.protocol, # Used for handling relative protocol paths
+  authorize: {user: "username", password: "password"}, # Used for authenticating with basic auth
 
   pdf_options: {
     landscape: false, # paper orientation
@@ -109,10 +110,10 @@ See [Chrome DevTools Protocol docs](https://chromedevtools.github.io/devtools-pr
 
 There are two ways to render Screenshots:
 
-* [FerrumPdf.render_screenshot](#render-screenshot)
+* [FerrumPdf.render_screenshot](#render-screenshots)
 * [render_screenshot in Rails](#render-screenshots-from-rails-controllers)
 
-#### Render Screenshot from Rails controller
+#### Render Screenshots from Rails controllers
 
 Use the `render_screenshot` helper in Rails controllers to render a PDF from the current action.
 
