@@ -1,5 +1,7 @@
 ### Unreleased
 
+* Add support for `browser_options`
+
 ### 0.3.0
 
 * Add `FerrumPdf.include_controller_module = false` option to skip adding `render_pdf` Rails helper
