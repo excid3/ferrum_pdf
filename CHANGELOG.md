@@ -1,5 +1,7 @@
 ### Unreleased
 
+* Use `mattr_accessor` default value for `FerrumPdf.include_controller_module`
+
 ### 0.3.0
 
 * Add `FerrumPdf.include_controller_module = false` option to skip adding `render_pdf` Rails helper

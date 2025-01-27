@@ -12,8 +12,7 @@ module FerrumPdf
   autoload :Controller, "ferrum_pdf/controller"
   autoload :HTMLPreprocessor, "ferrum_pdf/html_preprocessor"
 
-  mattr_accessor :include_controller_module
-  @@include_controller_module = true
+  mattr_accessor :include_controller_module, default: true
 
   class << self
     def browser(**options)
