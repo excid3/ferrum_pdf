@@ -20,8 +20,8 @@ module FerrumPdf
       @browser ||= Ferrum::Browser.new(options)
     end
 
-    def render_pdf(html: nil, url: nil, host: nil, protocol: nil, authorize: nil, wait_for_idle_options: nil, pdf_options: {})
-      render(host: host, protocol: protocol, html: html, url: url, authorize: authorize, wait_for_idle_options: wait_for_idle_options) do |page|
+    def render_pdf(html: nil, url: nil, host: nil, protocol: nil, authorize: nil, wait_for_idle_options: nil, wait_for_selector: nil, pdf_options: {})
+      render(host: host, protocol: protocol, html: html, url: url, authorize: authorize, wait_for_idle_options: wait_for_idle_options, wait_for_selector: wait_for_selector) do |page|
         page.pdf(**pdf_options.with_defaults(encoding: :binary))
       end
     end
@@ -32,13 +32,16 @@ module FerrumPdf
       end
     end
 
-    def render(host:, protocol:, html: nil, url: nil, authorize: nil, wait_for_idle_options: nil)
+    def render(host:, protocol:, html: nil, url: nil, authorize: nil, wait_for_idle_options: nil, wait_for_selector: nil)
       browser.create_page do |page|
         page.network.authorize(**authorize) { |req| req.continue } if authorize
         if html
           page.content = FerrumPdf::HTMLPreprocessor.process(html, host, protocol)
         else
           page.go_to(url)
+        end
+        if wait_for_selector
+          browser.wait_for_selector(wait_for_selector)
         end
         page.network.wait_for_idle(**wait_for_idle_options)
         yield page
