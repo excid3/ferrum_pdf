@@ -9,9 +9,11 @@ module FerrumPdf
     <div class='text right'><span class='pageNumber'></span>/<span class='totalPages'></span></div>
   HTML
 
+  autoload :AssetsHelper, "ferrum_pdf/assets_helper"
   autoload :Controller, "ferrum_pdf/controller"
   autoload :HTMLPreprocessor, "ferrum_pdf/html_preprocessor"
 
+  mattr_accessor :include_assets_helper_module, default: true
   mattr_accessor :include_controller_module
   @@include_controller_module = true
 
