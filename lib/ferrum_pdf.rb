@@ -42,6 +42,8 @@ module FerrumPdf
         end
         page.network.wait_for_idle(**wait_for_idle_options)
         yield page
+      ensure
+        page.close
       end
     rescue Ferrum::DeadBrowserError
       retry
