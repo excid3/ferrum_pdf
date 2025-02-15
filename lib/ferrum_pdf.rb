@@ -34,7 +34,7 @@ module FerrumPdf
 
     def render(host:, protocol:, html: nil, url: nil, authorize: nil, wait_for_idle_options: nil)
       browser.create_page do |page|
-        page.network.authorize(user: authorize[:user], password: authorize[:password]) { |req| req.continue } if authorize
+        page.network.authorize(**authorize) { |req| req.continue } if authorize
         if html
           page.content = FerrumPdf::HTMLPreprocessor.process(html, host, protocol)
         else
