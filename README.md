@@ -71,7 +71,8 @@ FerrumPdf.render_pdf(
   url: "https://example.com", # or provide a URL to the content
   host: request.base_url + "/", # Used for setting the host for relative paths
   protocol: request.protocol, # Used for handling relative protocol paths
-  authorize: {user: "username", password: "password"}, # Used for authenticating with basic auth
+  authorize: { user: "username", password: "password" }, # Used for authenticating with basic auth
+  wait_for_idle_options: { connections: 0, duration: 0.05, timeout: 5 }, # Used for setting network wait_for_idle options
 
   pdf_options: {
     landscape: false, # paper orientation
