@@ -15,9 +15,22 @@ module FerrumPdf
   mattr_accessor :include_controller_module
   @@include_controller_module = true
 
+  mattr_accessor :configuration
+  @@configuration = ActiveSupport::OrderedOptions.new
+
   class << self
-    def browser(**options)
-      @browser ||= Ferrum::Browser.new(options)
+    def configure
+      yield(configuration)
+      @browser = nil  # Reset the browser instance when configuration changes
+    end
+
+    def reset_configuration!
+      @@configuration = ActiveSupport::OrderedOptions.new
+      @browser = nil  # Reset the browser instance when configuration is reset
+    end
+
+    def browser
+      @browser ||= Ferrum::Browser.new(configuration)
     end
 
     def render_pdf(html: nil, url: nil, host: nil, protocol: nil, authorize: nil, wait_for_idle_options: nil, pdf_options: {})
