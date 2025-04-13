@@ -20,6 +20,11 @@ module FerrumPdf
       @browser ||= Ferrum::Browser.new(options)
     end
 
+    def quit
+      @browser&.quit
+      @browser = nil
+    end
+
     def render_pdf(html: nil, url: nil, host: nil, protocol: nil, authorize: nil, wait_for_idle_options: nil, pdf_options: {})
       render(host: host, protocol: protocol, html: html, url: url, authorize: authorize, wait_for_idle_options: wait_for_idle_options) do |page|
         page.pdf(**pdf_options.with_defaults(encoding: :binary))
