@@ -13,6 +13,7 @@ module FerrumPdf
   autoload :Controller, "ferrum_pdf/controller"
   autoload :HTMLPreprocessor, "ferrum_pdf/html_preprocessor"
 
+  mattr_accessor :include_assets_helper_module, default: true
   mattr_accessor :include_controller_module, default: true
   mattr_accessor :browsers, default: {}
   mattr_accessor :config, default: ActiveSupport::OrderedOptions.new.merge(
