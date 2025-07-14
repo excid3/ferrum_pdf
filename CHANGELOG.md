@@ -22,6 +22,15 @@ FerrumPdf.render_pdf(url: "https://example.org", browser: Ferrum::Browser.new)
   * Remove `protocol` option
   * Rename `host` to `base_url`
 
+* Add assets helpers to Rails views for dealing with Chrome quirks.
+  https://nathanfriend.com/2019/04/15/pdf-gotchas-with-headless-chrome.html
+
+```ruby
+ferrum_pdf_inline_stylesheet("application.css")
+ferrum_pdf_inline_javascript("application.js")
+ferrum_pdf_base64_asset("logo.svg")
+```
+
 ### 0.3.0
 
 * Add `FerrumPdf.include_controller_module = false` option to skip adding `render_pdf` Rails helper
