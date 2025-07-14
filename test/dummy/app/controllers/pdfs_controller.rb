@@ -13,7 +13,9 @@ class PdfsController < ApplicationController
             header_template: FerrumPdf::DEFAULT_HEADER_TEMPLATE,
             footer_template: FerrumPdf::DEFAULT_FOOTER_TEMPLATE
           }
-        )
+        ) do |browser, page|
+          Rails.logger.debug "FerrumPdf Chrome PID: #{browser.process.pid}"
+        end
         send_data pdf, disposition: :inline, filename: "example.pdf"
       }
       format.png { send_data render_screenshot, disposition: :inline, filename: "example.png" }
@@ -23,7 +25,9 @@ class PdfsController < ApplicationController
   def url
     respond_to do |format|
       format.pdf {
-        pdf = FerrumPdf.render_pdf(url: params[:url])
+        pdf = FerrumPdf.render_pdf(url: params[:url]) do |browser, page|
+          Rails.logger.debug "FerrumPdf Chrome PID: #{browser.process.pid}"
+        end
         send_data pdf, disposition: :inline, filename: "example.pdf"
       }
       format.png {

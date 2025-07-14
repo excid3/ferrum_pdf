@@ -1,5 +1,27 @@
 ### Unreleased
 
+### 0.4.0
+
+* Add `FerrumPdf.configure` block for setting default browser options
+* Restart the browser once if `Ferrum::DeadBrowserError` is raised
+* Add `FerrumPdf.add_browser` to allow registering multiple browsers and referencing them by name
+
+```ruby
+FerrumPdf.add_browser :large, window_size: [1920, 1080]
+```
+
+* Add `browser: :name` option for overriding the default browser
+
+```ruby
+FerrumPdf.render_pdf(url: "https://example.org", browser: :large)
+FerrumPdf.render_pdf(url: "https://example.org", browser: Ferrum::Browser.new)
+```
+
+* Simplify HTML preprocessing
+  * Extract protocol from `base_url` instead of using a second arg
+  * Remove `protocol` option
+  * Rename `host` to `base_url`
+
 ### 0.3.0
 
 * Add `FerrumPdf.include_controller_module = false` option to skip adding `render_pdf` Rails helper
