@@ -6,7 +6,7 @@ Inspired by [Grover](https://github.com/Studiosity/grover).
 
 ## Installation
 
-First, make sure Chrome is installed
+First, make sure Chrome is installed.
 
 Run the following or add the gem to your Gemfile:
 
@@ -63,15 +63,17 @@ FerrumPdf.render_pdf(html: content)
 FerrumPdf.render_pdf(url: "https://google.com")
 ```
 
-You can also pass host and protocol to convert any relative paths to full URLs. This is helpful for converting relative asset paths to full URLs.
+The full list of options:
 
 ```ruby
 FerrumPdf.render_pdf(
-  html: content, # Provide HTML
-  url: "https://example.com", # or provide a URL to the content
-  host: request.base_url + "/", # Used for setting the host for relative paths
-  protocol: request.protocol, # Used for handling relative protocol paths
-  authorize: {user: "username", password: "password"}, # Used for authenticating with basic auth
+  url: "https://example.com/page", # Provide a URL to the content
+
+  html: content, # or provide HTML
+  base_url: request.base_url, # Preprocesses `html` to convert relative paths and protocols. Example: "https://example.org"
+
+  authorize: { user: "username", password: "password" }, # Used for authenticating with basic auth
+  wait_for_idle_options: { connections: 0, duration: 0.05, timeout: 5 }, # Used for setting network wait_for_idle options
 
   pdf_options: {
     landscape: false, # paper orientation
@@ -156,14 +158,15 @@ FerrumPdf.render_screenshot(html: content)
 FerrumPdf.render_screenshot(url: "https://google.com")
 ```
 
-You can also pass host and protocol to convert any relative paths to full URLs. This is helpful for converting relative asset paths to full URLs.
+The full list of options
 
 ```ruby
 FerrumPdf.render_screenshot(
-  html: "",
-  url: "",
-  root_url: "",
-  protocol: "",
+  url: "https://example.com/page", # Provide a URL to the content
+
+  html: content, # or provide HTML
+  base_url: request.base_url, # Preprocesses `html` to convert relative paths and protocols. Example: "https://example.org"
+
   screenshot_options: {
     format: "png" # or "jpeg"
     quality: nil # Integer 0-100 works for jpeg only
@@ -176,9 +179,89 @@ FerrumPdf.render_screenshot(
 )
 ```
 
+## Configuring the Browser
+
+You can set the default browser options with the configure block.
+
+See [Ferrum's Customization docs](https://github.com/rubycdp/ferrum?tab=readme-ov-file#customization) for a full list of options.
+
+```ruby
+FerrumPdf.configure do |config|
+  config.window_size = [1920, 1080]
+
+  # config.process_timeout = 30 # defaults to 10
+  # config.browser_path = '/usr/bin/chromium'
+
+  # For use with Docker, but ensure you trust any sites visited
+  # config.browser_options = {
+  #   "no-sandbox" => true
+  # }
+end
+```
+
+For Docker, `seccomp` is recommend over `--no-sandbox` for security: https://github.com/jlandure/alpine-chrome?tab=readme-ov-file#3-ways-to-securely-use-chrome-headless-with-this-image
+
+To add Chrome to your Docker image:
+
+```dockerfile
+RUN apt-get update && apt-get install gnupg wget -y && \
+    wget --quiet --output-document=- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google-archive.gpg && \
+    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
+    apt-get update && \
+    apt-get install google-chrome-stable -y && \
+    rm -rf /var/lib/apt/lists/*
+```
+
+### Multiple Browser Support
+
+```ruby
+# Create two browsers using the FerrumPdf config, but overriding `window_size`
+FerrumPdf.add_browser(:small, window_size: [1024, 768]))
+FerrumPdf.add_browser(:large, window_size: [1920, 1080]))
+
+FerrumPdf.render_pdf(url: "https://example.org", browser: :small)
+FerrumPdf.render_pdf(url: "https://example.org", browser: :large)
+```
+
+You can also create a `Ferrum::Browser` instance and pass it in as `browser`:
+
+```ruby
+FerrumPdf.render_pdf(url: "https://example.org", browser: Ferrum::Browser.new)
+```
+
+## Debugging
+
+One option for debugging is to use Chrome in regular, non-headless mode:
+
+```ruby
+FerrumPdf.configure do |config|
+  config.headless = false
+end
+```
+
+FerrumPdf also allows you to pass a block for debugging. This block is executed after loading the page but before rendering the PDF or screenshot.
+
+```ruby
+FerrumPdf.render_pdf(url: "https://gooogle.com") do |browser, page|
+  # Open Chrome DevTools to remotely inspect the browser
+  browser.debug
+
+  # Or pause and poke around
+  binding.irb
+end
+```
+
+The block will receive the `Ferrum::Browser` and `Ferrum::Page` objects which you can use for debugging.
+
 ## Contributing
 
 If you have an issue you'd like to submit, please do so using the issue tracker in GitHub. In order for us to help you in the best way possible, please be as detailed as you can.
+
+To run the test suite, run:
+
+```bash
+bin/test
+```
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

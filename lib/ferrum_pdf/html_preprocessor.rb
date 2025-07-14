@@ -5,15 +5,20 @@ module FerrumPdf
   # @see https://github.com/pdfkit/pdfkit
   module HTMLPreprocessor
     # Change relative paths to absolute, and relative protocols to absolute protocols
-    def self.process(html, root_url, protocol)
-      html = translate_relative_paths(html, root_url) if root_url
+    #
+    #   process("Some HTML", "https://example.org")
+    #
+    def self.process(html, base_url)
+      base_url += "/" unless base_url.end_with? "/"
+      protocol = base_url.split("://").first
+      html = translate_relative_paths(html, base_url) if base_url
       html = translate_relative_protocols(html, protocol) if protocol
       html
     end
 
-    def self.translate_relative_paths(html, root_url)
+    def self.translate_relative_paths(html, base_url)
       # Try out this regexp using rubular http://rubular.com/r/hiAxBNX7KE
-      html.gsub(%r{(href|src)=(['"])/([^/"']([^"']*|[^"']*))?['"]}, "\\1=\\2#{root_url}\\3\\2")
+      html.gsub(%r{(href|src)=(['"])/([^/"']([^"']*|[^"']*))?['"]}, "\\1=\\2#{base_url}\\3\\2")
     end
     private_class_method :translate_relative_paths
 
