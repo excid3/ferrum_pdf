@@ -1,5 +1,7 @@
 ### Unreleased
 
+* Quit browser if a new one is added with the same name
+
 ### 0.4.1
 
 * Safely handle html preprocessing when `base_url` is `nil`

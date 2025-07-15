@@ -25,7 +25,10 @@ module FerrumPdf
       yield config
     end
 
+    # Creates and registers a new browser for exports
+    # If a browser with the same name already exists, it will be shut down before instantiating the new one
     def add_browser(name, **options)
+      @@browsers[name].quit if @@browsers[name]
       @@browsers[name] = Ferrum::Browser.new(@@config.merge(options))
     end
 
