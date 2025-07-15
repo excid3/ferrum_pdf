@@ -9,6 +9,8 @@ module FerrumPdf
     #   process("Some HTML", "https://example.org")
     #
     def self.process(html, base_url)
+      return html if base_url.blank?
+
       base_url += "/" unless base_url.end_with? "/"
       protocol = base_url.split("://").first
       html = translate_relative_paths(html, base_url) if base_url
