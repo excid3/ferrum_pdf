@@ -1,5 +1,7 @@
 ### Unreleased
 
+### 0.4.2
+
 * Quit browser if a new one is added with the same name
 
 ### 0.4.1
