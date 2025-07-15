@@ -1,5 +1,9 @@
 ### Unreleased
 
+### 0.4.1
+
+* Safely handle html preprocessing when `base_url` is `nil`
+
 ### 0.4.0
 
 * Add `FerrumPdf.configure` block for setting default browser options
