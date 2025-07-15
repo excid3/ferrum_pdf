@@ -5,6 +5,11 @@ class HtmlPreProcessingTest< ActiveSupport::TestCase
     assert_equal "<h1>Hello</h1>", FerrumPdf::HTMLPreprocessor.process("<h1>Hello</h1>", "https://example.org")
   end
 
+  test "does not raise error when url absent" do
+    assert_equal "<a href=\"/example.pdf\">PDF</a>", FerrumPdf::HTMLPreprocessor.process("<a href=\"/example.pdf\">PDF</a>", nil)
+    assert_equal "<a href=\"/example.pdf\">PDF</a>", FerrumPdf::HTMLPreprocessor.process("<a href=\"/example.pdf\">PDF</a>", "")
+  end
+
   test "replaces relative paths" do
     assert_equal "<a href=\"http://example.org/example.pdf\">PDF</a>", FerrumPdf::HTMLPreprocessor.process("<a href=\"/example.pdf\">PDF</a>", "http://example.org")
     assert_equal "<a href=\"https://example.com/example.pdf\">PDF</a>", FerrumPdf::HTMLPreprocessor.process("<a href=\"/example.pdf\">PDF</a>", "https://example.com")
