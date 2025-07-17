@@ -13,23 +13,39 @@ module FerrumPdf
   autoload :Controller, "ferrum_pdf/controller"
   autoload :HTMLPreprocessor, "ferrum_pdf/html_preprocessor"
 
+  mattr_accessor :browser_mutex, default: Mutex.new
   mattr_accessor :include_assets_helper_module, default: true
   mattr_accessor :include_controller_module, default: true
-  mattr_accessor :browsers, default: {}
   mattr_accessor :config, default: ActiveSupport::OrderedOptions.new.merge(
     window_size: [ 1920, 1080 ]
   )
+
+  # This doesn't use mattr_accessor because having a `.browser` getter and also
+  # having local variables named `browser` would be confusing. For simplicity,
+  # this is explicitly accessed.
+  @@browser = nil
 
   class << self
     def configure
       yield config
     end
 
-    # Creates and registers a new browser for exports
-    # If a browser with the same name already exists, it will be shut down before instantiating the new one
-    def add_browser(name, **options)
-      @@browsers[name].quit if @@browsers[name]
-      @@browsers[name] = Ferrum::Browser.new(@@config.merge(options))
+    # Sets the browser instance to use for all operations
+    # If a browser is already set, it will be shut down before setting the new one
+    def browser=(browser_instance)
+      browser_mutex.synchronize do
+        @@browser&.quit
+        @@browser = browser_instance
+      end
+    end
+
+    # Provides thread-safe access to the browser instance
+    def with_browser
+      browser_mutex.synchronize do
+        @@browser ||= Ferrum::Browser.new(config)
+        @@browser.restart unless @@browser.client.present?
+        yield @@browser
+      end
     end
 
     # Renders HTML or URL to PDF
@@ -68,36 +84,32 @@ module FerrumPdf
     #
     # This automatically applies HTML preprocessing if `html:` is present
     #
-    def load_page(url: nil, html: nil, base_url: nil, authorize: nil, wait_for_idle_options: nil, browser: :default, retries: 1)
+    def load_page(url: nil, html: nil, base_url: nil, authorize: nil, wait_for_idle_options: nil, retries: 1)
       try = 0
 
-      # Lookup browser if a name was passed
-      browser = @@browsers[browser] || add_browser(browser) if browser.is_a? Symbol
+      with_browser do |browser|
+        # Closes page automatically after block finishes
+        # https://github.com/rubycdp/ferrum/blob/main/lib/ferrum/browser.rb#L169
+        browser.create_page do |page|
+          page.network.authorize(**authorize) { |req| req.continue } if authorize
 
-      # Automatically restart the browser if it was disconnected
-      browser.restart unless browser.client.present?
+          # Load content
+          if html
+            page.content = FerrumPdf::HTMLPreprocessor.process(html, base_url)
+          else
+            page.go_to(url)
+          end
 
-      # Closes page automatically after block finishes
-      # https://github.com/rubycdp/ferrum/blob/main/lib/ferrum/browser.rb#L169
-      browser.create_page do |page|
-        page.network.authorize(**authorize) { |req| req.continue } if authorize
+          # Wait for everything to load
+          page.network.wait_for_idle(**wait_for_idle_options)
 
-        # Load content
-        if html
-          page.content = FerrumPdf::HTMLPreprocessor.process(html, base_url)
-        else
-          page.go_to(url)
+          yield browser, page
         end
-
-        # Wait for everything to load
-        page.network.wait_for_idle(**wait_for_idle_options)
-
-        yield browser, page
       end
     rescue Ferrum::DeadBrowserError
       try += 1
       if try <= retries
-        browser.restart
+        with_browser(&:restart)
         retry
       else
         raise
