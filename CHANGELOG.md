@@ -1,5 +1,9 @@
 ### Unreleased
 
+### 1.0.0
+
+* No changes
+
 ### 0.5.0
 
 * Thread safe browser management #63
