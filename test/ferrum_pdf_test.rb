@@ -64,4 +64,16 @@ class FerrumPdfTest < ActiveSupport::TestCase
 
     assert_same first_call_browser, second_call_browser
   end
+
+  test "uses different browser when provided" do
+    FerrumPdf.browser = nil
+
+    first_call_browser = nil
+    second_call_browser = nil
+
+    FerrumPdf.with_browser(Ferrum::Browser.new) { |browser| first_call_browser = browser }
+    FerrumPdf.with_browser { |browser| second_call_browser = browser }
+
+    assert_not_same first_call_browser, second_call_browser
+  end
 end

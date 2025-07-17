@@ -40,11 +40,15 @@ module FerrumPdf
     end
 
     # Provides thread-safe access to the browser instance
-    def with_browser
-      browser_mutex.synchronize do
-        @@browser ||= Ferrum::Browser.new(config)
-        @@browser.restart unless @@browser.client.present?
-        yield @@browser
+    def with_browser(browser=nil)
+      if browser
+        yield browser
+      else
+        browser_mutex.synchronize do
+          @@browser ||= Ferrum::Browser.new(config)
+          @@browser.restart unless @@browser.client.present?
+          yield @@browser
+        end
       end
     end
 
@@ -84,10 +88,10 @@ module FerrumPdf
     #
     # This automatically applies HTML preprocessing if `html:` is present
     #
-    def load_page(url: nil, html: nil, base_url: nil, authorize: nil, wait_for_idle_options: nil, retries: 1)
+    def load_page(url: nil, html: nil, base_url: nil, authorize: nil, wait_for_idle_options: nil, browser: nil, retries: 1)
       try = 0
 
-      with_browser do |browser|
+      with_browser(browser) do |browser|
         # Closes page automatically after block finishes
         # https://github.com/rubycdp/ferrum/blob/main/lib/ferrum/browser.rb#L169
         browser.create_page do |page|
