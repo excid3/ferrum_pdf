@@ -18,7 +18,7 @@ class FerrumPdfIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "can generate a PDF from URL" do
-    get "/pdfs/url.pdf", params: { url: "http://example.com" }
+    get "/pdfs/url.pdf", params: { url: "https://google.com" }
     assert_response :success
     assert_equal "application/pdf", response.content_type
     assert_includes response.headers["Content-Disposition"], "inline"
@@ -26,7 +26,7 @@ class FerrumPdfIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "can generate a PNG screenshot from URL" do
-    get "/pdfs/url.png", params: { url: "http://example.com" }
+    get "/pdfs/url.png", params: { url: "https://google.com" }
     assert_response :success
     assert_equal "image/png", response.content_type
     assert_includes response.headers["Content-Disposition"], "inline"

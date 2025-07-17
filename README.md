@@ -212,22 +212,37 @@ RUN apt-get update && apt-get install gnupg wget -y && \
     rm -rf /var/lib/apt/lists/*
 ```
 
-### Multiple Browser Support
+### Browser Management
+
+FerrumPdf uses a single browser instance per Ruby process that is automatically created when needed using your configuration settings:
 
 ```ruby
-# Create two browsers using the FerrumPdf config, but overriding `window_size`
-FerrumPdf.add_browser(:small, window_size: [1024, 768]))
-FerrumPdf.add_browser(:large, window_size: [1920, 1080]))
-
-FerrumPdf.render_pdf(url: "https://example.org", browser: :small)
-FerrumPdf.render_pdf(url: "https://example.org", browser: :large)
+# Browser is auto-created on first use
+FerrumPdf.render_pdf(url: "https://example.org")
 ```
 
-You can also create a `Ferrum::Browser` instance and pass it in as `browser`:
+You can also set a custom browser instance:
 
 ```ruby
-FerrumPdf.render_pdf(url: "https://example.org", browser: Ferrum::Browser.new)
+# Set a custom browser with specific options
+custom_browser = Ferrum::Browser.new(window_size: [800, 600], headless: false)
+FerrumPdf.browser = custom_browser
+
+# All subsequent calls will use this browser
+FerrumPdf.render_pdf(url: "https://example.org")
 ```
+
+To safely shut down the browser process:
+
+```ruby
+# This will quit the current browser and set it to nil
+FerrumPdf.browser = nil
+
+# Next call will auto-create a new browser
+FerrumPdf.render_pdf(url: "https://example.org")
+```
+
+**Thread Safety**: FerrumPdf is thread-safe within a single Ruby process. Multiple threads can safely use FerrumPdf concurrently, and they will share the same Chrome browser instance. However, each Ruby worker process will have its own separate Chrome instance.
 
 ## Debugging
 
