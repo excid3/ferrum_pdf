@@ -1,5 +1,45 @@
 ### Unreleased
 
+* Replace controller methods with a Rails renderer
+
+  This provides a much cleaner and better named Rails integration. You can pass options directly into the `render` method which will render the PDF or screenshot and pass it along to `send_data` for you.
+
+  Before:
+
+  ```ruby
+  class PdfsController < ApplicationController
+    def show
+      respond_to do |format|
+        format.pdf {
+          pdf = render_pdf()
+          send_data pdf, disposition: :inline, filename: "example.pdf"
+        }
+        format.png {
+          screenshot = render_screenshot()
+          send_data screenshot, disposition: :inline, filename: "example.png"
+        }
+      end
+    end
+  end
+  ```
+
+  After:
+
+  ```ruby
+  class PdfsController < ApplicationController
+    def show
+      respond_to do |format|
+        format.pdf { render ferrum_pdf: {}, disposition: :inline, filename: "example.pdf" }
+        format.png { render ferrum_screenshot: {}, disposition: :inline, filename: "example.png" }
+      end
+    end
+  end
+  ```
+
+
+
+* [Breaking] Remove assets helper config option. This will always be included by default.
+
 ### 1.0.0
 
 * No changes
