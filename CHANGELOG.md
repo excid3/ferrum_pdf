@@ -1,5 +1,16 @@
 ### Unreleased
 
+### 0.5.0
+
+* Thread safe browser management #63
+* [Breaking] Remove `add_browser` feature to simplify the gem.
+
+  You can pass `browser` to render methods to use your own `Ferrum::Browser` instance
+
+  ```ruby
+  FerrumPdf.render_pdf(url: "https://example.org", browser: Ferrum::Browser.new)
+  ```
+
 ### 0.4.2
 
 * Quit browser if a new one is added with the same name
