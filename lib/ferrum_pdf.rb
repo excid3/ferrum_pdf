@@ -40,7 +40,7 @@ module FerrumPdf
     end
 
     # Provides thread-safe access to the browser instance
-    def with_browser(browser=nil)
+    def with_browser(browser = nil)
       if browser
         yield browser
       else
