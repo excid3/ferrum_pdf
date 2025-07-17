@@ -20,8 +20,8 @@ class PdfsController < ApplicationController
 
   def url
     respond_to do |format|
-      format.pdf { render ferrum_pdf: {url: params[:url]}, disposition: :inline, filename: "example.pdf" }
-      format.png { render ferrum_screenshot: {url: params[:url], full: params[:full]}, disposition: :inline, filename: "example.png" }
+      format.pdf { render ferrum_pdf: { url: params[:url] }, disposition: :inline, filename: "example.pdf" }
+      format.png { render ferrum_screenshot: { url: params[:url], full: params[:full] }, disposition: :inline, filename: "example.png" }
     end
   end
 end
