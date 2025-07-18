@@ -10,12 +10,9 @@ module FerrumPdf
   HTML
 
   autoload :AssetsHelper, "ferrum_pdf/assets_helper"
-  autoload :Controller, "ferrum_pdf/controller"
   autoload :HTMLPreprocessor, "ferrum_pdf/html_preprocessor"
 
   mattr_accessor :browser_mutex, default: Mutex.new
-  mattr_accessor :include_assets_helper_module, default: true
-  mattr_accessor :include_controller_module, default: true
   mattr_accessor :config, default: ActiveSupport::OrderedOptions.new.merge(
     window_size: [ 1920, 1080 ]
   )
@@ -90,6 +87,7 @@ module FerrumPdf
     #
     def load_page(url: nil, html: nil, base_url: nil, authorize: nil, wait_for_idle_options: nil, browser: nil, retries: 1)
       try = 0
+      wait_for_idle_options ||= {}
 
       with_browser(browser) do |browser|
         # Closes page automatically after block finishes

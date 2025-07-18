@@ -6,9 +6,7 @@ Inspired by [Grover](https://github.com/Studiosity/grover), but without the Node
 
 ## Installation
 
-First, make sure Chrome is installed.
-
-Run the following or add the gem to your Gemfile:
+First, make sure Chrome is installed. Then run the following or add the gem to your Gemfile:
 
 ```ruby
 bundle add "ferrum_pdf"
@@ -22,21 +20,18 @@ You can use FerrumPdf to render [PDFs](#-pdfs) and [Screenshots](#-screenshots)
 
 There are two ways to render PDFs:
 
+* [`render ferrum_pdf: {}` in Rails](#render-pdfs-from-rails-controllers)
 * [FerrumPdf.render_pdf](#render-pdfs)
-* [render_pdf in Rails](#render-pdfs-from-rails-controllers)
 
 #### Render PDFs from Rails controllers
 
-Use the `render_pdf` helper in Rails controllers to render a PDF from the current action.
+Use the `ferrum_pdf` renderer in Rails controllers to render a PDF from the current action.
 
 ```ruby
 def show
   respond_to do |format|
     format.html
-    format.pdf {
-      pdf = render_pdf()
-      send_data pdf, disposition: :inline, filename: "example.pdf"
-    }
+    format.pdf { render ferrum_pdf: {}, disposition: :inline, filename: "example.pdf" }
   end
 end
 ```
@@ -44,14 +39,17 @@ end
 You can also customize which template is rendered. This will render the template to string with `render_to_string` in Rails, then pass it along to Chrome. For example, you can add headers and footers using `pdf_options` and use a specific layout:
 
 ```ruby
-render_pdf(
-  layout: "pdf,
+render ferrum_pdf: {
   pdf_options: {
     display_header_footer: true,
     header_template: FerrumPdf::DEFAULT_HEADER_TEMPLATE,
     footer_template: FerrumPdf::DEFAULT_FOOTER_TEMPLATE
-  }
-)
+  },
+  layout: "pdf",
+  template: "pdf",
+  disposition: :inline,
+  filename: "example.pdf"
+}
 ```
 
 #### Render PDFs
@@ -112,21 +110,18 @@ See [Chrome DevTools Protocol docs](https://chromedevtools.github.io/devtools-pr
 
 There are two ways to render Screenshots:
 
+* [`render ferrum_screenshot: {}` in Rails](#render-screenshots-from-rails-controllers)
 * [FerrumPdf.render_screenshot](#render-screenshots)
-* [render_screenshot in Rails](#render-screenshots-from-rails-controllers)
 
 #### Render Screenshots from Rails controllers
 
-Use the `render_screenshot` helper in Rails controllers to render a PDF from the current action.
+Use the `ferrum_screenshot` renderer in Rails controllers to render a PDF from the current action.
 
 ```ruby
 def show
   respond_to do |format|
     format.html
-    format.png {
-      screenshot = render_screenshot()
-      send_data screenshot, disposition: :inline, filename: "example.png"
-    }
+    format.png { render ferrum_screenshot: {}, disposition: :inline, filename: "example.png" }
   end
 end
 ```
@@ -134,7 +129,7 @@ end
 You can also customize which template is rendered. This will render the template to string with `render_to_string` in Rails, then pass it along to Chrome.
 
 ```ruby
-render_screenshot(
+render ferrum_screenshot: {
   screenshot_options: {
     format: "png" # or "jpeg"
     quality: nil # Integer 0-100 works for jpeg only
@@ -143,8 +138,12 @@ render_screenshot(
     area: nil # Hash area for screenshot, optional. {x: 0, y: 0, width: 100, height: 100}
     scale: nil # Float zoom in/out
     background_color: nil # Ferrum::RGBA.new(0, 0, 0, 0.0)
-  }
-)
+  },
+  layout: "example",
+  template: "example"
+  disposition: :inline,
+  filename: "example.png"
+}
 ```
 
 See [Ferrum screenshot docs](https://github.com/rubycdp/ferrum?tab=readme-ov-file#screenshotoptions--string--integer) for the full set of options.
