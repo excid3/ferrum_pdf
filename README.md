@@ -49,7 +49,7 @@ render ferrum_pdf: {
   template: "pdf",
   disposition: :inline,
   filename: "example.pdf"
-)
+}
 ```
 
 #### Render PDFs
