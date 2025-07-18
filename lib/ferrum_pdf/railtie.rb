@@ -17,7 +17,7 @@ module FerrumPdf
           send_data(pdf, **send_data_options.with_defaults(type: :pdf))
         end
 
-        # render ferrum_pdf: { pdf options }, template: "whatever", disposition: :inline, filename: "example.png"
+        # render ferrum_screenshot: { pdf options }, template: "whatever", disposition: :inline, filename: "example.png"
         ActionController.add_renderer :ferrum_screenshot do |screenshot_options, options|
           send_data_options = options.extract!(:disposition, :filename, :status)
           url = screenshot_options.delete(:url)
