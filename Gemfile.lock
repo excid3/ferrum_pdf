@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ferrum_pdf (1.0.0)
+    ferrum_pdf (2.0.0)
       ferrum (~> 0.15)
       rails (>= 6.0.0)
 

@@ -1,5 +1,7 @@
 ### Unreleased
 
+### 2.0.0
+
 * Replace controller methods with a Rails renderer
 
   This provides a much cleaner and better named Rails integration. You can pass options directly into the `render` method which will render the PDF or screenshot and pass it along to `send_data` for you.
@@ -35,8 +37,6 @@
     end
   end
   ```
-
-
 
 * [Breaking] Remove assets helper config option. This will always be included by default.
 
