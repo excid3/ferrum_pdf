@@ -39,6 +39,7 @@ end
 You can also customize which template is rendered. This will render the template to string with `render_to_string` in Rails, then pass it along to Chrome. For example, you can add headers and footers using `pdf_options` and use a specific layout:
 
 ```ruby
+# In your controller action
 render ferrum_pdf: {
     display_header_footer: true,
     header_template: FerrumPdf::DEFAULT_HEADER_TEMPLATE,
@@ -127,6 +128,7 @@ end
 You can also customize which template is rendered. This will render the template to string with `render_to_string` in Rails, then pass it along to Chrome.
 
 ```ruby
+# In your controller action
 render ferrum_screenshot: {
     format: "png" # or "jpeg"
     quality: nil # Integer 0-100 works for jpeg only
@@ -137,7 +139,7 @@ render ferrum_screenshot: {
     background_color: nil # Ferrum::RGBA.new(0, 0, 0, 0.0)
   },
   layout: "example",
-  template: "example"
+  template: "example",
   disposition: :inline,
   filename: "example.png"
 ```
