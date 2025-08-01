@@ -39,17 +39,19 @@ end
 You can also customize which template is rendered. This will render the template to string with `render_to_string` in Rails, then pass it along to Chrome. For example, you can add headers and footers using `pdf_options` and use a specific layout:
 
 ```ruby
-render ferrum_pdf: {
-  pdf_options: {
-    display_header_footer: true,
-    header_template: FerrumPdf::DEFAULT_HEADER_TEMPLATE,
-    footer_template: FerrumPdf::DEFAULT_FOOTER_TEMPLATE
+render(
+  ferrum_pdf: {
+    pdf_options: {
+      display_header_footer: true,
+      header_template: FerrumPdf::DEFAULT_HEADER_TEMPLATE,
+      footer_template: FerrumPdf::DEFAULT_FOOTER_TEMPLATE
+    }
   },
   layout: "pdf",
   template: "pdf",
   disposition: :inline,
   filename: "example.pdf"
-}
+)
 ```
 
 #### Render PDFs
@@ -129,21 +131,23 @@ end
 You can also customize which template is rendered. This will render the template to string with `render_to_string` in Rails, then pass it along to Chrome.
 
 ```ruby
-render ferrum_screenshot: {
-  screenshot_options: {
-    format: "png" # or "jpeg"
-    quality: nil # Integer 0-100 works for jpeg only
-    full: true # Boolean whether you need full page screenshot or a viewport
-    selector: nil # String css selector for given element, optional
-    area: nil # Hash area for screenshot, optional. {x: 0, y: 0, width: 100, height: 100}
-    scale: nil # Float zoom in/out
-    background_color: nil # Ferrum::RGBA.new(0, 0, 0, 0.0)
+render(
+  ferrum_screenshot: {
+    screenshot_options: {
+      format: "png" # or "jpeg"
+      quality: nil # Integer 0-100 works for jpeg only
+      full: true # Boolean whether you need full page screenshot or a viewport
+      selector: nil # String css selector for given element, optional
+      area: nil # Hash area for screenshot, optional. {x: 0, y: 0, width: 100, height: 100}
+      scale: nil # Float zoom in/out
+      background_color: nil # Ferrum::RGBA.new(0, 0, 0, 0.0)
+    },
   },
   layout: "example",
-  template: "example"
+  template: "example",
   disposition: :inline,
   filename: "example.png"
-}
+)
 ```
 
 See [Ferrum screenshot docs](https://github.com/rubycdp/ferrum?tab=readme-ov-file#screenshotoptions--string--integer) for the full set of options.
