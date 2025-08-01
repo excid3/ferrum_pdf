@@ -40,7 +40,6 @@ You can also customize which template is rendered. This will render the template
 
 ```ruby
 render ferrum_pdf: {
-  pdf_options: {
     display_header_footer: true,
     header_template: FerrumPdf::DEFAULT_HEADER_TEMPLATE,
     footer_template: FerrumPdf::DEFAULT_FOOTER_TEMPLATE
@@ -49,7 +48,6 @@ render ferrum_pdf: {
   template: "pdf",
   disposition: :inline,
   filename: "example.pdf"
-}
 ```
 
 #### Render PDFs
@@ -130,7 +128,6 @@ You can also customize which template is rendered. This will render the template
 
 ```ruby
 render ferrum_screenshot: {
-  screenshot_options: {
     format: "png" # or "jpeg"
     quality: nil # Integer 0-100 works for jpeg only
     full: true # Boolean whether you need full page screenshot or a viewport
@@ -143,7 +140,6 @@ render ferrum_screenshot: {
   template: "example"
   disposition: :inline,
   filename: "example.png"
-}
 ```
 
 See [Ferrum screenshot docs](https://github.com/rubycdp/ferrum?tab=readme-ov-file#screenshotoptions--string--integer) for the full set of options.
