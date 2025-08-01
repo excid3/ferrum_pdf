@@ -39,8 +39,8 @@ end
 You can also customize which template is rendered. This will render the template to string with `render_to_string` in Rails, then pass it along to Chrome. For example, you can add headers and footers using `pdf_options` and use a specific layout:
 
 ```ruby
-# In your controller action
-render ferrum_pdf: {
+def show
+  render ferrum_pdf: {
     display_header_footer: true,
     header_template: FerrumPdf::DEFAULT_HEADER_TEMPLATE,
     footer_template: FerrumPdf::DEFAULT_FOOTER_TEMPLATE
@@ -49,6 +49,7 @@ render ferrum_pdf: {
   template: "pdf",
   disposition: :inline,
   filename: "example.pdf"
+end
 ```
 
 #### Render PDFs
@@ -128,8 +129,8 @@ end
 You can also customize which template is rendered. This will render the template to string with `render_to_string` in Rails, then pass it along to Chrome.
 
 ```ruby
-# In your controller action
-render ferrum_screenshot: {
+def show
+  render ferrum_screenshot: {
     format: "png" # or "jpeg"
     quality: nil # Integer 0-100 works for jpeg only
     full: true # Boolean whether you need full page screenshot or a viewport
@@ -142,6 +143,7 @@ render ferrum_screenshot: {
   template: "example",
   disposition: :inline,
   filename: "example.png"
+end
 ```
 
 See [Ferrum screenshot docs](https://github.com/rubycdp/ferrum?tab=readme-ov-file#screenshotoptions--string--integer) for the full set of options.
