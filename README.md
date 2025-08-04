@@ -4,6 +4,8 @@ PDFs & screentshots for Rails using [Ferrum](https://github.com/rubycdp/ferrum) 
 
 Inspired by [Grover](https://github.com/Studiosity/grover), but without the Node.js and puppeteer dependencies. 🎉
 
+<img src="ferrum_pdf.png" alt="logo" style="width:450px;"/>
+
 ## Installation
 
 First, make sure Chrome is installed. Then run the following or add the gem to your Gemfile:
