@@ -265,7 +265,6 @@ FerrumPdf.render_pdf(url: "https://example.org")
 ```
 
 > [!TIP]
-
 > **Thread Safety**: FerrumPdf is thread-safe within a single Ruby process. Multiple threads can safely use FerrumPdf concurrently, and they will share the same Chrome browser instance. However, each Ruby worker process will have its own separate Chrome instance.
 
 If you need multiple browsers, you can pass the browser option when rendering:
