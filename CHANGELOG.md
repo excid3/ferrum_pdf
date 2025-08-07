@@ -1,5 +1,10 @@
 ### Unreleased
 
+### 2.1.0
+
+* Add `page_options`, `pdf_options`, and `screenshot_options` configuration #75
+* Retry on `Ferrum::TimeoutError` when loading a page and raise if retries fail #74
+
 ### 2.0.0
 
 * Replace controller methods with a Rails renderer
