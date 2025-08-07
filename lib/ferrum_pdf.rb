@@ -103,12 +103,12 @@ module FerrumPdf
           end
 
           # Wait for everything to load
-          page.network.wait_for_idle(**wait_for_idle_options)
+          page.network.wait_for_idle!(**wait_for_idle_options)
 
           yield browser, page
         end
       end
-    rescue Ferrum::DeadBrowserError
+    rescue Ferrum::DeadBrowserError, Ferrum::TimeoutError
       try += 1
       if try <= retries
         with_browser(&:restart)
