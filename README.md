@@ -22,8 +22,8 @@ You can use FerrumPdf to render [PDFs](#-pdfs) and [Screenshots](#-screenshots)
 
 There are two ways to render PDFs:
 
-- [`render ferrum_pdf: {}` in Rails](#render-pdfs-from-rails-controllers)
-- [FerrumPdf.render_pdf](#render-pdfs)
+* [`render ferrum_pdf: {}` in Rails](#render-pdfs-from-rails-controllers)
+* [FerrumPdf.render_pdf](#render-pdfs)
 
 #### Render PDFs from Rails controllers
 
@@ -112,8 +112,8 @@ See [Chrome DevTools Protocol docs](https://chromedevtools.github.io/devtools-pr
 
 There are two ways to render Screenshots:
 
-- [`render ferrum_screenshot: {}` in Rails](#render-screenshots-from-rails-controllers)
-- [FerrumPdf.render_screenshot](#render-screenshots)
+* [`render ferrum_screenshot: {}` in Rails](#render-screenshots-from-rails-controllers)
+* [FerrumPdf.render_screenshot](#render-screenshots)
 
 #### Render Screenshots from Rails controllers
 
@@ -264,7 +264,9 @@ FerrumPdf.browser = nil
 FerrumPdf.render_pdf(url: "https://example.org")
 ```
 
-> [!TIP] > **Thread Safety**: FerrumPdf is thread-safe within a single Ruby process. Multiple threads can safely use FerrumPdf concurrently, and they will share the same Chrome browser instance. However, each Ruby worker process will have its own separate Chrome instance.
+> [!TIP]
+
+> **Thread Safety**: FerrumPdf is thread-safe within a single Ruby process. Multiple threads can safely use FerrumPdf concurrently, and they will share the same Chrome browser instance. However, each Ruby worker process will have its own separate Chrome instance.
 
 If you need multiple browsers, you can pass the browser option when rendering:
 
