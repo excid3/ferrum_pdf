@@ -89,7 +89,7 @@ module FerrumPdf
     # This automatically applies HTML preprocessing if `html:` is present
     #
     def load_page(url: nil, html: nil, base_url: nil, authorize: nil, wait_for_idle_options: nil, browser: nil, retries: nil)
-      try = 0
+      try ||= 0
       authorize ||= config.dig(:page_options, :authorize)
       base_url ||= config.dig(:page_options, :base_url)
       retries ||= config.page_options.fetch(:retries, 1)
@@ -109,12 +109,12 @@ module FerrumPdf
           end
 
           # Wait for everything to load
-          page.network.wait_for_idle(**wait_for_idle_options)
+          page.network.wait_for_idle!(**wait_for_idle_options)
 
           yield browser, page
         end
       end
-    rescue Ferrum::DeadBrowserError
+    rescue Ferrum::DeadBrowserError, Ferrum::TimeoutError
       try += 1
       if try <= retries
         with_browser(&:restart)
