@@ -14,7 +14,10 @@ module FerrumPdf
 
   mattr_accessor :browser_mutex, default: Mutex.new
   mattr_accessor :config, default: ActiveSupport::OrderedOptions.new.merge(
-    window_size: [ 1920, 1080 ]
+    window_size: [ 1920, 1080 ],
+    page_options: ActiveSupport::OrderedOptions.new,
+    pdf_options: ActiveSupport::OrderedOptions.new,
+    screenshot_options: ActiveSupport::OrderedOptions.new
   )
 
   # This doesn't use mattr_accessor because having a `.browser` getter and also
@@ -42,7 +45,7 @@ module FerrumPdf
         yield browser
       else
         browser_mutex.synchronize do
-          @@browser ||= Ferrum::Browser.new(config)
+          @@browser ||= Ferrum::Browser.new(config.except(:page_options, :pdf_options, :screenshot_options))
           @@browser.restart unless @@browser.client.present?
           yield @@browser
         end
@@ -61,7 +64,7 @@ module FerrumPdf
     def render_pdf(pdf_options: {}, **load_page_args)
       load_page(**load_page_args) do |browser, page|
         yield browser, page if block_given?
-        page.pdf(**pdf_options.with_defaults(encoding: :binary))
+        page.pdf(**pdf_options.with_defaults(encoding: :binary, **config.pdf_options))
       end
     end
 
@@ -77,7 +80,7 @@ module FerrumPdf
     def render_screenshot(screenshot_options: {}, **load_page_args)
       load_page(**load_page_args) do |browser, page|
         yield browser, page if block_given?
-        page.screenshot(**screenshot_options.with_defaults(encoding: :binary, full: true))
+        page.screenshot(**screenshot_options.with_defaults(encoding: :binary, full: true, **config.screenshot_options))
       end
     end
 
@@ -85,9 +88,12 @@ module FerrumPdf
     #
     # This automatically applies HTML preprocessing if `html:` is present
     #
-    def load_page(url: nil, html: nil, base_url: nil, authorize: nil, wait_for_idle_options: nil, browser: nil, retries: 1)
+    def load_page(url: nil, html: nil, base_url: nil, authorize: nil, wait_for_idle_options: nil, browser: nil, retries: nil)
       try = 0
-      wait_for_idle_options ||= {}
+      authorize ||= config.dig(:page_options, :authorize)
+      base_url ||= config.dig(:page_options, :base_url)
+      retries ||= config.page_options.fetch(:retries, 1)
+      wait_for_idle_options = config.page_options.fetch(:wait_for_idle_options, {}).merge(wait_for_idle_options || {})
 
       with_browser(browser) do |browser|
         # Closes page automatically after block finishes

@@ -22,8 +22,8 @@ You can use FerrumPdf to render [PDFs](#-pdfs) and [Screenshots](#-screenshots)
 
 There are two ways to render PDFs:
 
-* [`render ferrum_pdf: {}` in Rails](#render-pdfs-from-rails-controllers)
-* [FerrumPdf.render_pdf](#render-pdfs)
+- [`render ferrum_pdf: {}` in Rails](#render-pdfs-from-rails-controllers)
+- [FerrumPdf.render_pdf](#render-pdfs)
 
 #### Render PDFs from Rails controllers
 
@@ -112,8 +112,8 @@ See [Chrome DevTools Protocol docs](https://chromedevtools.github.io/devtools-pr
 
 There are two ways to render Screenshots:
 
-* [`render ferrum_screenshot: {}` in Rails](#render-screenshots-from-rails-controllers)
-* [FerrumPdf.render_screenshot](#render-screenshots)
+- [`render ferrum_screenshot: {}` in Rails](#render-screenshots-from-rails-controllers)
+- [FerrumPdf.render_screenshot](#render-screenshots)
 
 #### Render Screenshots from Rails controllers
 
@@ -180,7 +180,28 @@ FerrumPdf.render_screenshot(
 )
 ```
 
-## Configuring the Browser
+## Configuration
+
+You can set default values for page loads, PDF renders, and screenshot renders with the configure block.
+
+```ruby
+FerrumPdf.configure do |config|
+  config.page_options.base_url = "https://example.com/"
+  config.page_options.authorize = { user: "username", password: "password" }
+  config.page_options.wait_for_idle_options = { timeout: 90 }
+  config.page_options.retries = 3
+
+  config.pdf_options.margin_top = 0.2
+  config.pdf_options.margin_bottom = 0.2
+  config.pdf_options.margin_left = 0.2
+  config.pdf_options.margin_right = 0.2
+
+  config.screenshot_options.format = :png
+  config.screenshot_options.full = false
+end
+```
+
+### Configuring the Browser
 
 You can set the default browser options with the configure block.
 
@@ -213,7 +234,7 @@ RUN apt-get update && apt-get install gnupg wget -y && \
     rm -rf /var/lib/apt/lists/*
 ```
 
-### Browser Management
+#### Browser Management
 
 FerrumPdf uses a single browser instance per Ruby process that is automatically created when needed using your configuration settings:
 
@@ -243,8 +264,7 @@ FerrumPdf.browser = nil
 FerrumPdf.render_pdf(url: "https://example.org")
 ```
 
-> [!TIP]
-> **Thread Safety**: FerrumPdf is thread-safe within a single Ruby process. Multiple threads can safely use FerrumPdf concurrently, and they will share the same Chrome browser instance. However, each Ruby worker process will have its own separate Chrome instance.
+> [!TIP] > **Thread Safety**: FerrumPdf is thread-safe within a single Ruby process. Multiple threads can safely use FerrumPdf concurrently, and they will share the same Chrome browser instance. However, each Ruby worker process will have its own separate Chrome instance.
 
 If you need multiple browsers, you can pass the browser option when rendering:
 
@@ -288,4 +308,5 @@ bin/test
 ```
 
 ## License
+
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
