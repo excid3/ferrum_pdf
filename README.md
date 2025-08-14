@@ -4,6 +4,8 @@ PDFs & screentshots for Rails using [Ferrum](https://github.com/rubycdp/ferrum) 
 
 Inspired by [Grover](https://github.com/Studiosity/grover), but without the Node.js and puppeteer dependencies. 🎉
 
+<img src="ferrum_pdf.png" alt="logo" style="width:450px;"/>
+
 ## Installation
 
 First, make sure Chrome is installed. Then run the following or add the gem to your Gemfile:
@@ -39,8 +41,8 @@ end
 You can also customize which template is rendered. This will render the template to string with `render_to_string` in Rails, then pass it along to Chrome. For example, you can add headers and footers using `pdf_options` and use a specific layout:
 
 ```ruby
-render ferrum_pdf: {
-  pdf_options: {
+def show
+  render ferrum_pdf: {
     display_header_footer: true,
     header_template: FerrumPdf::DEFAULT_HEADER_TEMPLATE,
     footer_template: FerrumPdf::DEFAULT_FOOTER_TEMPLATE
@@ -49,7 +51,7 @@ render ferrum_pdf: {
   template: "pdf",
   disposition: :inline,
   filename: "example.pdf"
-}
+end
 ```
 
 #### Render PDFs
@@ -129,8 +131,8 @@ end
 You can also customize which template is rendered. This will render the template to string with `render_to_string` in Rails, then pass it along to Chrome.
 
 ```ruby
-render ferrum_screenshot: {
-  screenshot_options: {
+def show
+  render ferrum_screenshot: {
     format: "png" # or "jpeg"
     quality: nil # Integer 0-100 works for jpeg only
     full: true # Boolean whether you need full page screenshot or a viewport
@@ -140,10 +142,10 @@ render ferrum_screenshot: {
     background_color: nil # Ferrum::RGBA.new(0, 0, 0, 0.0)
   },
   layout: "example",
-  template: "example"
+  template: "example",
   disposition: :inline,
   filename: "example.png"
-}
+end
 ```
 
 See [Ferrum screenshot docs](https://github.com/rubycdp/ferrum?tab=readme-ov-file#screenshotoptions--string--integer) for the full set of options.
@@ -178,7 +180,28 @@ FerrumPdf.render_screenshot(
 )
 ```
 
-## Configuring the Browser
+## Configuration
+
+You can set default values for page loads, PDF renders, and screenshot renders with the configure block.
+
+```ruby
+FerrumPdf.configure do |config|
+  config.page_options.base_url = "https://example.com/"
+  config.page_options.authorize = { user: "username", password: "password" }
+  config.page_options.wait_for_idle_options = { timeout: 90 }
+  config.page_options.retries = 3
+
+  config.pdf_options.margin_top = 0.2
+  config.pdf_options.margin_bottom = 0.2
+  config.pdf_options.margin_left = 0.2
+  config.pdf_options.margin_right = 0.2
+
+  config.screenshot_options.format = :png
+  config.screenshot_options.full = false
+end
+```
+
+### Configuring the Browser
 
 You can set the default browser options with the configure block.
 
@@ -211,7 +234,7 @@ RUN apt-get update && apt-get install gnupg wget -y && \
     rm -rf /var/lib/apt/lists/*
 ```
 
-### Browser Management
+#### Browser Management
 
 FerrumPdf uses a single browser instance per Ruby process that is automatically created when needed using your configuration settings:
 
