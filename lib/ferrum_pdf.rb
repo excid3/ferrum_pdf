@@ -4,7 +4,7 @@ require "ferrum"
 
 module FerrumPdf
   DEFAULT_HEADER_TEMPLATE = "<div class='date text left'></div><div class='title text center'></div>"
-  DEFAULT_FOOTER_TEMPLATE = <<~HTML
+  DEFAULT_FOOTER_TEMPLATE = <<~HTML.freeze
     <div class='url text left grow'></div>
     <div class='text right'><span class='pageNumber'></span>/<span class='totalPages'></span></div>
   HTML
@@ -40,16 +40,17 @@ module FerrumPdf
     end
 
     # Provides thread-safe access to the browser instance
-    def with_browser(browser = nil)
-      if browser
-        yield browser
-      else
-        browser_mutex.synchronize do
-          @@browser ||= Ferrum::Browser.new(config.except(:page_options, :pdf_options, :screenshot_options))
-          @@browser.restart unless @@browser.client.present?
-          yield @@browser
-        end
+    def browser_instance
+      browser_mutex.synchronize do
+        @@browser ||= Ferrum::Browser.new(config.except(:page_options, :pdf_options, :screenshot_options))
       end
+    end
+
+    def with_browser(browser = nil)
+      browser ||= browser_instance
+      browser.restart unless browser.client.present?
+
+      yield browser
     end
 
     # Renders HTML or URL to PDF
