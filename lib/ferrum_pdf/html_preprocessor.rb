@@ -8,26 +8,29 @@ module FerrumPdf
     #
     #   process("Some HTML", "https://example.org")
     #
-    def self.process(html, base_url)
-      return html if base_url.blank?
+    class << self
+      def process(html, base_url)
+        return html if base_url.blank?
 
-      base_url += "/" unless base_url.end_with? "/"
-      protocol = base_url.split("://").first
-      html = translate_relative_paths(html, base_url) if base_url
-      html = translate_relative_protocols(html, protocol) if protocol
-      html
-    end
+        base_url += "/" unless base_url.end_with? "/"
+        protocol = base_url.split("://").first
 
-    def self.translate_relative_paths(html, base_url)
-      # Try out this regexp using rubular http://rubular.com/r/hiAxBNX7KE
-      html.gsub(%r{(href|src)=(['"])/([^/"']([^"']*|[^"']*))?['"]}, "\\1=\\2#{base_url}\\3\\2")
-    end
-    private_class_method :translate_relative_paths
+        html = translate_relative_paths(html, base_url)
+        html = translate_relative_protocols(html, protocol) if protocol
+        html
+      end
 
-    def self.translate_relative_protocols(body, protocol)
-      # Try out this regexp using rubular http://rubular.com/r/0Ohk0wFYxV
-      body.gsub(%r{(href|src)=(['"])//([^"']*|[^"']*)['"]}, "\\1=\\2#{protocol}://\\3\\2")
+      private
+
+      def translate_relative_paths(html, base_url)
+        # Try out this regexp using rubular http://rubular.com/r/hiAxBNX7KE
+        html.gsub(%r{(href|src)=(['"])/([^/"']([^"']*|[^"']*))?['"]}, "\\1=\\2#{base_url}\\3\\2")
+      end
+
+      def translate_relative_protocols(body, protocol)
+        # Try out this regexp using rubular http://rubular.com/r/0Ohk0wFYxV
+        body.gsub(%r{(href|src)=(['"])//([^"']*|[^"']*)['"]}, "\\1=\\2#{protocol}://\\3\\2")
+      end
     end
-    private_class_method :translate_relative_protocols
   end
 end
