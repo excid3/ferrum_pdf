@@ -70,6 +70,7 @@ FerrumPdf.render_pdf(
   url: "https://example.com/page", # Provide a URL to the content
 
   html: content, # or provide HTML
+  display_url: request.original_url, # When supplying content via :html its best to give Chrome a hint of the current url so that it can process relative paths in the document. This is preferred over providing :base_url (see below).
   base_url: request.base_url, # Preprocesses `html` to convert relative paths and protocols. Example: "https://example.org"
 
   authorize: { user: "username", password: "password" }, # Used for authenticating with basic auth

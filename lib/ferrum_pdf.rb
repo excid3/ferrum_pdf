@@ -57,8 +57,9 @@ module FerrumPdf
     #   render_pdf(url: "https://example.org/receipts/example.pdf")
     #   render_pdf(html: "<h1>Hello world</h1>")
     #
-    # For rendering HTML, we also need the base_url for preprocessing URLs with relative paths & protocols
+    # For rendering HTML, we also need display_url or base_url for preprocessing URLs with relative paths & protocols
     #
+    #   render_pdf(html: "<h1>Hello world</h1>", display_url: "https://example.org/hello_world")
     #   render_pdf(html: "<h1>Hello world</h1>", base_url: "https://example.org/")
     #
     def render_pdf(pdf_options: {}, **load_page_args)
@@ -73,8 +74,9 @@ module FerrumPdf
     # render_screenshot(url: "https://example.org/receipts/example.pdf")
     # render_screenshot(html: "<h1>Hello world</h1>")
     #
-    # For rendering HTML, we also need the base_url for preprocessing URLs with relative paths & protocols
+    # For rendering HTML, we also need display_url or base_url for preprocessing URLs with relative paths & protocols
     #
+    #   render_screenshot(html: "<h1>Hello world</h1>", display_url: "https://example.org/hello_world")
     #   render_screenshot(html: "<h1>Hello world</h1>", base_url: "https://example.org/")
     #
     def render_screenshot(screenshot_options: {}, **load_page_args)
@@ -88,7 +90,7 @@ module FerrumPdf
     #
     # This automatically applies HTML preprocessing if `html:` is present
     #
-    def load_page(url: nil, html: nil, base_url: nil, authorize: nil, wait_for_idle_options: nil, browser: nil, retries: nil)
+    def load_page(url: nil, html: nil, display_url: nil, base_url: nil, authorize: nil, wait_for_idle_options: nil, browser: nil, retries: nil)
       try ||= 0
       authorize ||= config.dig(:page_options, :authorize)
       base_url ||= config.dig(:page_options, :base_url)
@@ -103,7 +105,21 @@ module FerrumPdf
 
           # Load content
           if html
-            page.content = FerrumPdf::HTMLPreprocessor.process(html, base_url)
+            if display_url
+              html_intercepted = false
+              page.network.intercept
+              page.on(:request) do |request|
+                if html_intercepted
+                  request.continue
+                else
+                  html_intercepted = true
+                  request.respond(body: html.blank? ? " " : html)
+                end
+              end
+              page.go_to(display_url)
+            else
+              page.content = FerrumPdf::HTMLPreprocessor.process(html, base_url)
+            end
           else
             page.go_to(url)
           end
