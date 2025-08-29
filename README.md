@@ -1,6 +1,6 @@
 # 📄 FerrumPdf
 
-PDFs & screentshots for Rails using [Ferrum](https://github.com/rubycdp/ferrum) & headless Chrome.
+PDFs & screenshots for Rails using [Ferrum](https://github.com/rubycdp/ferrum) & headless Chrome.
 
 Inspired by [Grover](https://github.com/Studiosity/grover), but without the Node.js and puppeteer dependencies. 🎉
 
