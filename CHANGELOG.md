@@ -1,5 +1,7 @@
 ### Unreleased
 
+* Add `:display_url` support for HTML rendering. You should consider switching from `:base_url` in favour of this for more reliable results.
+
 ### 2.1.0
 
 * Add `page_options`, `pdf_options`, and `screenshot_options` configuration #75
