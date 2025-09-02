@@ -1,5 +1,9 @@
 ### Unreleased
 
+* BREAKING CHANGE: `:base_url` has been removed in favour of `:display_url`. These aren't the same. The `:display_url` is intended to be the address of the page as a browser would normally see it. Relative paths in the `:html` are interpreted in light of this.
+* BREAKING CHANGE: `ferrum_pdf_inline_stylesheet`, `ferrum_pdf_inline_javascript`, and `ferrum_pdf_base64_asset` have been removed in favour of `:display_url`.
+* Add `:display_url` support for HTML rendering.
+
 ### 2.1.0
 
 * Add `page_options`, `pdf_options`, and `screenshot_options` configuration #75
