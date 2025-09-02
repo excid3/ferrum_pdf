@@ -1,11 +1,5 @@
 module FerrumPdf
   class Railtie < ::Rails::Railtie
-    initializer "ferrum_pdf.assets_helper" do
-      ActiveSupport.on_load(:action_view) do
-        include FerrumPdf::AssetsHelper
-      end
-    end
-
     initializer "ferrum_pdf.controller" do
       ActiveSupport.on_load(:action_controller) do
         # render ferrum_pdf: { pdf options }, template: "whatever", disposition: :inline, filename: "example.pdf"

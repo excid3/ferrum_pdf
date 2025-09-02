@@ -70,8 +70,7 @@ FerrumPdf.render_pdf(
   url: "https://example.com/page", # Provide a URL to the content
 
   html: content, # or provide HTML
-  display_url: request.original_url, # When supplying content via :html its best to give Chrome a hint of the current url so that it can process relative paths in the document. This is preferred over providing :base_url (see below).
-  base_url: request.base_url, # Preprocesses `html` to convert relative paths and protocols. Example: "https://example.org"
+  display_url: request.original_url, # When supplying content via :html its best to give Chrome a hint of the current url so that it can process relative paths in the document. If you don't provide this, http://example.com will be used instead.
 
   authorize: { user: "username", password: "password" }, # Used for authenticating with basic auth
   wait_for_idle_options: { connections: 0, duration: 0.05, timeout: 5 }, # Used for setting network wait_for_idle options
@@ -167,7 +166,7 @@ FerrumPdf.render_screenshot(
   url: "https://example.com/page", # Provide a URL to the content
 
   html: content, # or provide HTML
-  base_url: request.base_url, # Preprocesses `html` to convert relative paths and protocols. Example: "https://example.org"
+  display_url: request.original_url, # When supplying content via :html its best to give Chrome a hint of the current url so that it can process relative paths in the document. If you don't provide this, http://example.com will be used instead.
 
   screenshot_options: {
     format: "png" # or "jpeg"
@@ -187,7 +186,6 @@ You can set default values for page loads, PDF renders, and screenshot renders w
 
 ```ruby
 FerrumPdf.configure do |config|
-  config.page_options.base_url = "https://example.com/"
   config.page_options.authorize = { user: "username", password: "password" }
   config.page_options.wait_for_idle_options = { timeout: 90 }
   config.page_options.retries = 3
