@@ -9,9 +9,6 @@ module FerrumPdf
     <div class='text right'><span class='pageNumber'></span>/<span class='totalPages'></span></div>
   HTML
 
-  autoload :AssetsHelper, "ferrum_pdf/assets_helper"
-  autoload :HTMLPreprocessor, "ferrum_pdf/html_preprocessor"
-
   mattr_accessor :browser_mutex, default: Mutex.new
   mattr_accessor :config, default: ActiveSupport::OrderedOptions.new.merge(
     window_size: [ 1920, 1080 ],
@@ -58,9 +55,9 @@ module FerrumPdf
     #   render_pdf(url: "https://example.org/receipts/example.pdf")
     #   render_pdf(html: "<h1>Hello world</h1>")
     #
-    # For rendering HTML, we also need the base_url for preprocessing URLs with relative paths & protocols
+    # For rendering HTML, we also need display_url for so that Chrome can interpret URLs with relative paths & protocols
     #
-    #   render_pdf(html: "<h1>Hello world</h1>", base_url: "https://example.org/")
+    #   render_pdf(html: "<h1>Hello world</h1>", display_url: "https://example.org/hello_world")
     #
     def render_pdf(pdf_options: {}, **load_page_args)
       load_page(**load_page_args) do |browser, page|
@@ -74,9 +71,9 @@ module FerrumPdf
     # render_screenshot(url: "https://example.org/receipts/example.pdf")
     # render_screenshot(html: "<h1>Hello world</h1>")
     #
-    # For rendering HTML, we also need the base_url for preprocessing URLs with relative paths & protocols
+    # For rendering HTML, we also need display_url for so that Chrome can interpret URLs with relative paths & protocols
     #
-    #   render_screenshot(html: "<h1>Hello world</h1>", base_url: "https://example.org/")
+    #   render_screenshot(html: "<h1>Hello world</h1>", display_url: "https://example.org/hello_world")
     #
     def render_screenshot(screenshot_options: {}, **load_page_args)
       load_page(**load_page_args) do |browser, page|
@@ -87,12 +84,9 @@ module FerrumPdf
 
     # Loads page into the browser to be used for rendering PDFs or screenshots
     #
-    # This automatically applies HTML preprocessing if `html:` is present
-    #
-    def load_page(url: nil, html: nil, base_url: nil, authorize: nil, wait_for_idle_options: nil, browser: nil, retries: nil)
+    def load_page(url: nil, html: nil, display_url: nil, authorize: nil, wait_for_idle_options: nil, browser: nil, retries: nil)
       try ||= 0
       authorize ||= config.dig(:page_options, :authorize)
-      base_url ||= config.dig(:page_options, :base_url)
       retries ||= config.page_options.fetch(:retries, 1)
       wait_for_idle_options = config.page_options.fetch(:wait_for_idle_options, {}).merge(wait_for_idle_options || {})
 
@@ -104,7 +98,17 @@ module FerrumPdf
 
           # Load content
           if html
-            page.content = FerrumPdf::HTMLPreprocessor.process(html, base_url)
+            html_intercepted = false
+            page.network.intercept
+            page.on(:request) do |request|
+              if html_intercepted
+                request.continue
+              else
+                html_intercepted = true
+                request.respond(body: html.blank? ? " " : html)
+              end
+            end
+            page.go_to(display_url || "http://example.com")
           else
             page.go_to(url)
           end
