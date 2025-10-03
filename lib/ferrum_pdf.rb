@@ -114,8 +114,8 @@ module FerrumPdf
           end
 
           # Wait for everything to load
-          idle_connections = page.network.wait_for_idle(**wait_for_idle_options)
-          raise Ferrum::TimeoutError if config.dig(:timeout_if_open_connections) && idle_connections
+          idle = page.network.wait_for_idle(**wait_for_idle_options)
+          raise Ferrum::TimeoutError if config.dig(:timeout_if_open_connections) && !idle
 
           yield browser, page
         end
