@@ -17,7 +17,8 @@ module FerrumPdf
     window_size: [ 1920, 1080 ],
     page_options: ActiveSupport::OrderedOptions.new,
     pdf_options: ActiveSupport::OrderedOptions.new,
-    screenshot_options: ActiveSupport::OrderedOptions.new
+    screenshot_options: ActiveSupport::OrderedOptions.new,
+    timeout_if_open_connections: true
   )
 
   # This doesn't use mattr_accessor because having a `.browser` getter and also
@@ -109,7 +110,8 @@ module FerrumPdf
           end
 
           # Wait for everything to load
-          page.network.wait_for_idle!(**wait_for_idle_options)
+          idle_connections = page.network.wait_for_idle(**wait_for_idle_options)
+          raise Ferrum::TimeoutError if config.dig(:timeout_if_open_connections) && idle_connections
 
           yield browser, page
         end
