@@ -14,8 +14,7 @@ module FerrumPdf
     window_size: [ 1920, 1080 ],
     page_options: ActiveSupport::OrderedOptions.new,
     pdf_options: ActiveSupport::OrderedOptions.new,
-    screenshot_options: ActiveSupport::OrderedOptions.new,
-    timeout_if_open_connections: true
+    screenshot_options: ActiveSupport::OrderedOptions.new
   )
 
   # This doesn't use mattr_accessor because having a `.browser` getter and also
@@ -84,11 +83,12 @@ module FerrumPdf
 
     # Loads page into the browser to be used for rendering PDFs or screenshots
     #
-    def load_page(url: nil, html: nil, display_url: nil, authorize: nil, wait_for_idle_options: nil, browser: nil, retries: nil)
+    def load_page(url: nil, html: nil, display_url: nil, authorize: nil, wait_for_idle_options: nil, timeout_if_open_connections: true, browser: nil, retries: nil)
       try ||= 0
       authorize ||= config.dig(:page_options, :authorize)
       retries ||= config.page_options.fetch(:retries, 1)
       wait_for_idle_options = config.page_options.fetch(:wait_for_idle_options, {}).merge(wait_for_idle_options || {})
+      timeout_if_open_connections ||= config.page_options.fetch(:timeout_if_open_connections, true)
 
       with_browser(browser) do |browser|
         # Closes page automatically after block finishes
@@ -115,7 +115,7 @@ module FerrumPdf
 
           # Wait for everything to load
           idle = page.network.wait_for_idle(**wait_for_idle_options)
-          raise Ferrum::TimeoutError if config.dig(:timeout_if_open_connections) && !idle
+          raise Ferrum::TimeoutError if timeout_if_open_connections && !idle
 
           yield browser, page
         end
