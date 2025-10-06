@@ -74,6 +74,7 @@ FerrumPdf.render_pdf(
 
   authorize: { user: "username", password: "password" }, # Used for authenticating with basic auth
   wait_for_idle_options: { connections: 0, duration: 0.05, timeout: 5 }, # Used for setting network wait_for_idle options
+  timeout_if_open_connections: true,
 
   pdf_options: {
     landscape: false, # paper orientation
