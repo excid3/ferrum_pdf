@@ -1,6 +1,8 @@
-require "ferrum_pdf/version"
-require "ferrum_pdf/railtie"
 require "ferrum"
+require "action_controller"
+
+require "ferrum_pdf/renderers"
+require "ferrum_pdf/version"
 
 module FerrumPdf
   DEFAULT_HEADER_TEMPLATE = "<div class='date text left'></div><div class='title text center'></div>"
