@@ -1,5 +1,10 @@
 ### Unreleased
 
+### 3.0.1
+
+* Fix `timeout_if_open_connections` when false
+* Depend only on `actionpack`
+
 ### 3.0.0
 
 * BREAKING CHANGE: `:base_url` has been removed in favour of `:display_url`. These aren't the same. The `:display_url` is intended to be the address of the page as a browser would normally see it. Relative paths in the `:html` are interpreted in light of this.

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ferrum_pdf (3.0.0)
+    ferrum_pdf (3.0.1)
       actionpack (>= 6.0.0)
       ferrum (~> 0.15)
 
