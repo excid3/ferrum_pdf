@@ -1,6 +1,8 @@
-require "ferrum_pdf/version"
-require "ferrum_pdf/railtie"
 require "ferrum"
+require "action_controller"
+
+require "ferrum_pdf/renderers"
+require "ferrum_pdf/version"
 
 module FerrumPdf
   DEFAULT_HEADER_TEMPLATE = "<div class='date text left'></div><div class='title text center'></div>"
@@ -81,14 +83,16 @@ module FerrumPdf
       end
     end
 
+    private
+
     # Loads page into the browser to be used for rendering PDFs or screenshots
     #
-    def load_page(url: nil, html: nil, display_url: nil, authorize: nil, wait_for_idle_options: nil, timeout_if_open_connections: true, browser: nil, retries: nil)
+    def load_page(url: nil, html: nil, display_url: nil, authorize: nil, wait_for_idle_options: nil, timeout_if_open_connections: nil, browser: nil, retries: nil)
       try ||= 0
       authorize ||= config.dig(:page_options, :authorize)
       retries ||= config.page_options.fetch(:retries, 1)
       wait_for_idle_options = config.page_options.fetch(:wait_for_idle_options, {}).merge(wait_for_idle_options || {})
-      timeout_if_open_connections ||= config.page_options.fetch(:timeout_if_open_connections, true)
+      timeout_if_open_connections = config.page_options.fetch(:timeout_if_open_connections, true) if timeout_if_open_connections.nil?
 
       with_browser(browser) do |browser|
         # Closes page automatically after block finishes

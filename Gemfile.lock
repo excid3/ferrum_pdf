@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    ferrum_pdf (3.0.0)
+    ferrum_pdf (3.0.1)
+      actionpack (>= 6.0.0)
       ferrum (~> 0.15)
-      rails (>= 6.0.0)
 
 GEM
   remote: https://rubygems.org/
@@ -270,6 +270,7 @@ DEPENDENCIES
   ferrum_pdf!
   propshaft
   puma
+  rails
   rubocop-rails-omakase
   sqlite3
 
