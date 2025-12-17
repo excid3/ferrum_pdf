@@ -1,5 +1,9 @@
 ### Unreleased
 
+### 3.1.0
+
+* Add `viewport` option #110
+
 ### 3.0.1
 
 * Fix `timeout_if_open_connections` when false

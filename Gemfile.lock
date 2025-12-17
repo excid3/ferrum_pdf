@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ferrum_pdf (3.0.1)
+    ferrum_pdf (3.1.0)
       actionpack (>= 6.0.0)
       ferrum (~> 0.15)
 
@@ -275,4 +275,4 @@ DEPENDENCIES
   sqlite3
 
 BUNDLED WITH
-   2.7.2
+  4.0.2
