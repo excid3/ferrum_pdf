@@ -108,7 +108,7 @@ FerrumPdf.render_pdf(
 )
 ```
 
-See [Chrome DevTools Protocol docs](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF) and [Ferrum's `#pdf` docs](https://github.com/rubycdp/ferrum?tab=readme-ov-file#pdfoptions--string--boolean) for the full set of options.
+See [Chrome DevTools Protocol docs](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF) and [Ferrum's `#pdf` docs](https://docs.rubycdp.com/docs/ferrum/screenshots/#pdfoptions--string--boolean) for the full set of options.
 
 ### 🎆 Screenshots
 
