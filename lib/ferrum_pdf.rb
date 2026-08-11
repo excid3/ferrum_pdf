@@ -5,6 +5,9 @@ require "ferrum_pdf/renderers"
 require "ferrum_pdf/version"
 
 module FerrumPdf
+  # Reserved .invalid TLD so relative paths fail fast on DNS instead of hanging
+  # against a domain we don't control.
+  DEFAULT_DISPLAY_URL = "http://ferrum-pdf.invalid"
   DEFAULT_HEADER_TEMPLATE = "<div class='date text left'></div><div class='title text center'></div>"
   DEFAULT_FOOTER_TEMPLATE = <<~HTML
     <div class='url text left grow'></div>
@@ -94,6 +97,7 @@ module FerrumPdf
       wait_for_idle_options = config.page_options.fetch(:wait_for_idle_options, {}).merge(wait_for_idle_options || {})
       timeout_if_open_connections = config.page_options.fetch(:timeout_if_open_connections, true) if timeout_if_open_connections.nil?
       viewport ||= config.dig(:page_options, :viewport)
+      display_url ||= config.dig(:page_options, :display_url)
 
       with_browser(browser) do |browser|
         # Closes page automatically after block finishes
@@ -114,7 +118,7 @@ module FerrumPdf
                 request.respond(body: html.blank? ? " " : html)
               end
             end
-            page.go_to(display_url || "http://example.com")
+            page.go_to(display_url || DEFAULT_DISPLAY_URL)
           else
             page.go_to(url)
           end
