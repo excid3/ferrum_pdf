@@ -70,7 +70,7 @@ FerrumPdf.render_pdf(
   url: "https://example.com/page", # Provide a URL to the content
 
   html: content, # or provide HTML
-  display_url: request.original_url, # When supplying content via :html its best to give Chrome a hint of the current url so that it can process relative paths in the document. If you don't provide this, http://example.com will be used instead.
+  display_url: request.original_url, # Base URL for resolving relative paths in :html. Defaults to FerrumPdf.config.page_options.display_url.
 
   authorize: { user: "username", password: "password" }, # Used for authenticating with basic auth
   wait_for_idle_options: { connections: 0, duration: 0.05, timeout: 5 }, # Used for setting network wait_for_idle options
@@ -168,7 +168,7 @@ FerrumPdf.render_screenshot(
   url: "https://example.com/page", # Provide a URL to the content
 
   html: content, # or provide HTML
-  display_url: request.original_url, # When supplying content via :html its best to give Chrome a hint of the current url so that it can process relative paths in the document. If you don't provide this, http://example.com will be used instead.
+  display_url: request.original_url, # Base URL for resolving relative paths in :html. Defaults to FerrumPdf.config.page_options.display_url.
 
   screenshot_options: {
     format: "png" # or "jpeg"
@@ -192,6 +192,7 @@ FerrumPdf.configure do |config|
   config.page_options.wait_for_idle_options = { timeout: 90 }
   config.page_options.retries = 3
   config.page_options.viewport = { width: 1200, height: 800, scale_factor: 3 }
+  config.page_options.display_url = "https://example.org"
 
   config.pdf_options.margin_top = 0.2
   config.pdf_options.margin_bottom = 0.2
