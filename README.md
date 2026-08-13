@@ -108,7 +108,7 @@ FerrumPdf.render_pdf(
 )
 ```
 
-See [Chrome DevTools Protocol docs](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF) and [Ferrum's `#pdf` docs](https://github.com/rubycdp/ferrum?tab=readme-ov-file#pdfoptions--string--boolean) for the full set of options.
+See [Chrome DevTools Protocol docs](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF) and [Ferrum's pdf docs](https://docs.rubycdp.com/docs/ferrum/screenshots/#pdfoptions--string--boolean) for the full set of options.
 
 ### 🎆 Screenshots
 
@@ -150,7 +150,7 @@ def show
 end
 ```
 
-See [Ferrum screenshot docs](https://github.com/rubycdp/ferrum?tab=readme-ov-file#screenshotoptions--string--integer) for the full set of options.
+See [Ferrum's screenshot docs](https://docs.rubycdp.com/docs/ferrum/screenshots/#screenshotoptions--string--integer) for the full set of options.
 
 #### Render Screenshots
 
@@ -208,7 +208,7 @@ end
 
 You can set the default browser options with the configure block.
 
-See [Ferrum's Customization docs](https://github.com/rubycdp/ferrum?tab=readme-ov-file#customization) for a full list of options.
+See [Ferrum's Customization docs](https://docs.rubycdp.com/docs/ferrum/customization) for a full list of options.
 
 ```ruby
 FerrumPdf.configure do |config|
