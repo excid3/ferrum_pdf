@@ -5,6 +5,9 @@ require "ferrum_pdf/renderers"
 require "ferrum_pdf/version"
 
 module FerrumPdf
+  # Reserved .invalid TLD so relative paths fail fast on DNS instead of hanging
+  # against a domain we don't control.
+  DEFAULT_DISPLAY_URL = "http://ferrum-pdf.invalid"
   DEFAULT_HEADER_TEMPLATE = "<div class='date text left'></div><div class='title text center'></div>"
   DEFAULT_FOOTER_TEMPLATE = <<~HTML
     <div class='url text left grow'></div>
@@ -87,18 +90,21 @@ module FerrumPdf
 
     # Loads page into the browser to be used for rendering PDFs or screenshots
     #
-    def load_page(url: nil, html: nil, display_url: nil, authorize: nil, wait_for_idle_options: nil, timeout_if_open_connections: nil, browser: nil, retries: nil)
+    def load_page(url: nil, html: nil, display_url: nil, authorize: nil, wait_for_idle_options: nil, timeout_if_open_connections: nil, browser: nil, retries: nil, viewport: nil)
       try ||= 0
       authorize ||= config.dig(:page_options, :authorize)
       retries ||= config.page_options.fetch(:retries, 1)
       wait_for_idle_options = config.page_options.fetch(:wait_for_idle_options, {}).merge(wait_for_idle_options || {})
       timeout_if_open_connections = config.page_options.fetch(:timeout_if_open_connections, true) if timeout_if_open_connections.nil?
+      viewport ||= config.dig(:page_options, :viewport)
+      display_url ||= config.dig(:page_options, :display_url)
 
       with_browser(browser) do |browser|
         # Closes page automatically after block finishes
         # https://github.com/rubycdp/ferrum/blob/main/lib/ferrum/browser.rb#L169
         browser.create_page do |page|
           page.network.authorize(**authorize) { |req| req.continue } if authorize
+          page.set_viewport(**viewport) if viewport
 
           # Load content
           if html
@@ -112,7 +118,7 @@ module FerrumPdf
                 request.respond(body: html.blank? ? " " : html)
               end
             end
-            page.go_to(display_url || "http://example.com")
+            page.go_to(display_url || DEFAULT_DISPLAY_URL)
           else
             page.go_to(url)
           end

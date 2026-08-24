@@ -76,4 +76,44 @@ class FerrumPdfTest < ActiveSupport::TestCase
 
     assert_not_same first_call_browser, second_call_browser
   end
+
+  test "falls back to the reserved display_url when none is given" do
+    FerrumPdf.render_pdf(html: "<h1>Hello world</h1>") do |_browser, page|
+      # Chrome normalizes a bare host by appending a trailing slash
+      assert_equal "#{FerrumPdf::DEFAULT_DISPLAY_URL}/", page.url
+    end
+  end
+
+  test "uses display_url from config when none is given" do
+    FerrumPdf.config.page_options.display_url = "http://configured.invalid/reports"
+
+    FerrumPdf.render_pdf(html: "<h1>Hello world</h1>") do |_browser, page|
+      assert_equal "http://configured.invalid/reports", page.url
+    end
+  ensure
+    FerrumPdf.config.page_options.delete(:display_url)
+  end
+
+  test "explicit display_url takes precedence over config" do
+    FerrumPdf.config.page_options.display_url = "http://configured.invalid/reports"
+
+    FerrumPdf.render_pdf(html: "<h1>Hello world</h1>", display_url: "http://explicit.invalid/page") do |_browser, page|
+      assert_equal "http://explicit.invalid/page", page.url
+    end
+  ensure
+    FerrumPdf.config.page_options.delete(:display_url)
+  end
+
+  test "renders HTML with relative assets and no display_url" do
+    html = <<~HTML
+      <html>
+        <head><link rel="stylesheet" href="/assets/app.css"></head>
+        <body><h1>Hello world</h1><img src="/assets/logo.png"></body>
+      </html>
+    HTML
+
+    # Unresolvable asset requests must fail fast on DNS. If they hang instead,
+    # #go_to raises Ferrum::PendingConnectionsError and no PDF comes back.
+    assert FerrumPdf.render_pdf(html: html).start_with?("%PDF")
+  end
 end

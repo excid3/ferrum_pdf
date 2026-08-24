@@ -70,11 +70,12 @@ FerrumPdf.render_pdf(
   url: "https://example.com/page", # Provide a URL to the content
 
   html: content, # or provide HTML
-  display_url: request.original_url, # When supplying content via :html its best to give Chrome a hint of the current url so that it can process relative paths in the document. If you don't provide this, http://example.com will be used instead.
+  display_url: request.original_url, # Base URL for resolving relative paths in :html. Defaults to FerrumPdf.config.page_options.display_url.
 
   authorize: { user: "username", password: "password" }, # Used for authenticating with basic auth
   wait_for_idle_options: { connections: 0, duration: 0.05, timeout: 5 }, # Used for setting network wait_for_idle options
   timeout_if_open_connections: true,
+  viewport: { width: 1200, height: 800, scale_factor: 3 } # Used for setting the viewport dimensions and device scale factor (DPR) when rendering the page
 
   pdf_options: {
     landscape: false, # paper orientation
@@ -107,7 +108,7 @@ FerrumPdf.render_pdf(
 )
 ```
 
-See [Chrome DevTools Protocol docs](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF) and [Ferrum's `#pdf` docs](https://github.com/rubycdp/ferrum?tab=readme-ov-file#pdfoptions--string--boolean) for the full set of options.
+See [Chrome DevTools Protocol docs](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF) and [Ferrum's pdf docs](https://docs.rubycdp.com/docs/ferrum/screenshots/#pdfoptions--string--boolean) for the full set of options.
 
 ### 🎆 Screenshots
 
@@ -149,7 +150,7 @@ def show
 end
 ```
 
-See [Ferrum screenshot docs](https://github.com/rubycdp/ferrum?tab=readme-ov-file#screenshotoptions--string--integer) for the full set of options.
+See [Ferrum's screenshot docs](https://docs.rubycdp.com/docs/ferrum/screenshots/#screenshotoptions--string--integer) for the full set of options.
 
 #### Render Screenshots
 
@@ -167,7 +168,7 @@ FerrumPdf.render_screenshot(
   url: "https://example.com/page", # Provide a URL to the content
 
   html: content, # or provide HTML
-  display_url: request.original_url, # When supplying content via :html its best to give Chrome a hint of the current url so that it can process relative paths in the document. If you don't provide this, http://example.com will be used instead.
+  display_url: request.original_url, # Base URL for resolving relative paths in :html. Defaults to FerrumPdf.config.page_options.display_url.
 
   screenshot_options: {
     format: "png" # or "jpeg"
@@ -190,6 +191,8 @@ FerrumPdf.configure do |config|
   config.page_options.authorize = { user: "username", password: "password" }
   config.page_options.wait_for_idle_options = { timeout: 90 }
   config.page_options.retries = 3
+  config.page_options.viewport = { width: 1200, height: 800, scale_factor: 3 }
+  config.page_options.display_url = "https://example.org"
 
   config.pdf_options.margin_top = 0.2
   config.pdf_options.margin_bottom = 0.2
@@ -205,7 +208,7 @@ end
 
 You can set the default browser options with the configure block.
 
-See [Ferrum's Customization docs](https://github.com/rubycdp/ferrum?tab=readme-ov-file#customization) for a full list of options.
+See [Ferrum's Customization docs](https://docs.rubycdp.com/docs/ferrum/customization) for a full list of options.
 
 ```ruby
 FerrumPdf.configure do |config|
