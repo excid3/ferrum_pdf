@@ -1,5 +1,7 @@
 ### Unreleased
 
+* Add `javascript_enabled` option to disable JavaScript execution when rendering
+
 ### 3.1.0
 
 * Add `viewport` option #110
