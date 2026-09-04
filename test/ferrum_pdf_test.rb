@@ -65,6 +65,21 @@ class FerrumPdfTest < ActiveSupport::TestCase
     assert_same first_call_browser, second_call_browser
   end
 
+  test "replaces a browser whose contexts were never built" do
+    browser = Ferrum::Browser.new
+    pid = browser.process.pid
+    browser.instance_variable_set(:@contexts, nil)
+    FerrumPdf.browser = browser
+
+    FerrumPdf.with_browser do |yielded|
+      assert_not_same browser, yielded
+      assert_not_nil yielded.contexts
+      assert_not_equal pid, yielded.process.pid
+    end
+
+    assert_nil browser.process.pid
+  end
+
   test "uses different browser when provided" do
     FerrumPdf.browser = nil
 

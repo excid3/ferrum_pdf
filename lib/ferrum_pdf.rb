@@ -47,8 +47,9 @@ module FerrumPdf
         yield browser
       else
         browser_mutex.synchronize do
+          discard_unusable_browser
           @@browser ||= Ferrum::Browser.new(config.except(:page_options, :pdf_options, :screenshot_options))
-          @@browser.restart unless @@browser.client.present?
+          @@browser.restart if @@browser.client.nil?
           yield @@browser
         end
       end
@@ -87,6 +88,17 @@ module FerrumPdf
     end
 
     private
+
+    # A browser whose start died between Client.new and Contexts.new keeps a client but no
+    # contexts, and #restart cannot repair it: quit dereferences the nil contexts. Drop it and
+    # release the process and socket it still holds, so the next call builds a fresh browser.
+    def discard_unusable_browser
+      return if @@browser.nil? || @@browser.client.nil? || !@@browser.contexts.nil?
+
+      @@browser.process&.stop
+      @@browser.client&.close
+      @@browser = nil
+    end
 
     # Loads page into the browser to be used for rendering PDFs or screenshots
     #
