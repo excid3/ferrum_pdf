@@ -75,7 +75,8 @@ FerrumPdf.render_pdf(
   authorize: { user: "username", password: "password" }, # Used for authenticating with basic auth
   wait_for_idle_options: { connections: 0, duration: 0.05, timeout: 5 }, # Used for setting network wait_for_idle options
   timeout_if_open_connections: true,
-  viewport: { width: 1200, height: 800, scale_factor: 3 } # Used for setting the viewport dimensions and device scale factor (DPR) when rendering the page
+  viewport: { width: 1200, height: 800, scale_factor: 3 }, # Used for setting the viewport dimensions and device scale factor (DPR) when rendering the page
+  javascript_enabled: true, # Set to false to prevent scripts in the page from running. Note: this does not block network requests (images, stylesheets, iframes) or meta refresh redirects.
 
   pdf_options: {
     landscape: false, # paper orientation
@@ -192,6 +193,7 @@ FerrumPdf.configure do |config|
   config.page_options.wait_for_idle_options = { timeout: 90 }
   config.page_options.retries = 3
   config.page_options.viewport = { width: 1200, height: 800, scale_factor: 3 }
+  config.page_options.javascript_enabled = false
   config.page_options.display_url = "https://example.org"
 
   config.pdf_options.margin_top = 0.2
