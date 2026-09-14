@@ -1,5 +1,7 @@
 ### Unreleased
 
+### 3.2.0
+
 * Add `javascript_enabled` option to disable JavaScript execution when rendering #148
 * Replace the shared browser when it failed to start fully, instead of reusing it for every render #149
 
