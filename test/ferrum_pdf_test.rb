@@ -1,6 +1,11 @@
 require "test_helper"
 
 class FerrumPdfTest < ActiveSupport::TestCase
+  JAVASCRIPT_HTML = <<~HTML
+    <div id="target">not executed</div>
+    <script>document.getElementById("target").textContent = "executed"</script>
+  HTML
+
   def teardown
     # Reset browser state after each test to avoid flaky behavior
     FerrumPdf.browser = nil
@@ -130,5 +135,51 @@ class FerrumPdfTest < ActiveSupport::TestCase
     # Unresolvable asset requests must fail fast on DNS. If they hang instead,
     # #go_to raises Ferrum::PendingConnectionsError and no PDF comes back.
     assert FerrumPdf.render_pdf(html: html).start_with?("%PDF")
+  end
+
+  test "javascript is enabled by default" do
+    FerrumPdf.render_pdf(html: JAVASCRIPT_HTML) do |_browser, page|
+      assert_equal "executed", page.at_css("#target").text
+    end
+  end
+
+  test "javascript_enabled: false prevents scripts from running" do
+    FerrumPdf.render_pdf(html: JAVASCRIPT_HTML, javascript_enabled: false) do |_browser, page|
+      assert_equal "not executed", page.at_css("#target").text
+    end
+  end
+
+  test "javascript_enabled can be configured globally" do
+    FerrumPdf.config.page_options.javascript_enabled = false
+
+    FerrumPdf.render_pdf(html: JAVASCRIPT_HTML) do |_browser, page|
+      assert_equal "not executed", page.at_css("#target").text
+    end
+  ensure
+    FerrumPdf.config.page_options.delete(:javascript_enabled)
+  end
+
+  test "explicit javascript_enabled takes precedence over config" do
+    FerrumPdf.config.page_options.javascript_enabled = false
+
+    FerrumPdf.render_pdf(html: JAVASCRIPT_HTML, javascript_enabled: true) do |_browser, page|
+      assert_equal "executed", page.at_css("#target").text
+    end
+  ensure
+    FerrumPdf.config.page_options.delete(:javascript_enabled)
+  end
+
+  test "javascript_enabled does not leak into later renders" do
+    FerrumPdf.render_pdf(html: JAVASCRIPT_HTML, javascript_enabled: false)
+
+    FerrumPdf.render_pdf(html: JAVASCRIPT_HTML) do |_browser, page|
+      assert_equal "executed", page.at_css("#target").text
+    end
+  end
+
+  test "javascript_enabled is also honoured for screenshots" do
+    FerrumPdf.render_screenshot(html: JAVASCRIPT_HTML, javascript_enabled: false) do |_browser, page|
+      assert_equal "not executed", page.at_css("#target").text
+    end
   end
 end

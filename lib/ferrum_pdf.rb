@@ -102,7 +102,7 @@ module FerrumPdf
 
     # Loads page into the browser to be used for rendering PDFs or screenshots
     #
-    def load_page(url: nil, html: nil, display_url: nil, authorize: nil, wait_for_idle_options: nil, timeout_if_open_connections: nil, browser: nil, retries: nil, viewport: nil)
+    def load_page(url: nil, html: nil, display_url: nil, authorize: nil, wait_for_idle_options: nil, timeout_if_open_connections: nil, browser: nil, retries: nil, viewport: nil, javascript_enabled: nil)
       try ||= 0
       authorize ||= config.dig(:page_options, :authorize)
       retries ||= config.page_options.fetch(:retries, 1)
@@ -110,6 +110,7 @@ module FerrumPdf
       timeout_if_open_connections = config.page_options.fetch(:timeout_if_open_connections, true) if timeout_if_open_connections.nil?
       viewport ||= config.dig(:page_options, :viewport)
       display_url ||= config.dig(:page_options, :display_url)
+      javascript_enabled = config.page_options.fetch(:javascript_enabled, true) if javascript_enabled.nil?
 
       with_browser(browser) do |browser|
         # Closes page automatically after block finishes
@@ -117,6 +118,9 @@ module FerrumPdf
         browser.create_page do |page|
           page.network.authorize(**authorize) { |req| req.continue } if authorize
           page.set_viewport(**viewport) if viewport
+
+          # Has to happen before #go_to, otherwise inline scripts have already run.
+          page.disable_javascript unless javascript_enabled
 
           # Load content
           if html
