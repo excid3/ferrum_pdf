@@ -76,7 +76,7 @@ FerrumPdf.render_pdf(
   wait_for_idle_options: { connections: 0, duration: 0.05, timeout: 5 }, # Used for setting network wait_for_idle options
   timeout_if_open_connections: true,
   viewport: { width: 1200, height: 800, scale_factor: 3 }, # Used for setting the viewport dimensions and device scale factor (DPR) when rendering the page
-  javascript_enabled: true, # Set to false to prevent scripts in the page from running. Useful when the HTML is not fully trusted.
+  javascript_enabled: true, # Set to false to prevent scripts in the page from running. Note: this does not block network requests (images, stylesheets, iframes) or meta refresh redirects.
 
   pdf_options: {
     landscape: false, # paper orientation

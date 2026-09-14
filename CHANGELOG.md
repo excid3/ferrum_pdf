@@ -1,6 +1,6 @@
 ### Unreleased
 
-* Add `javascript_enabled` option to disable JavaScript execution when rendering
+* Add `javascript_enabled` option to disable JavaScript execution when rendering #148
 
 ### 3.1.0
 
