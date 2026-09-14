@@ -4,6 +4,7 @@
 
 * Add `javascript_enabled` option to disable JavaScript execution when rendering #148
 * Replace the shared browser when it failed to start fully, instead of reusing it for every render #149
+* Default `display_url` to `http://ferrum-pdf.invalid` instead of `example.com`, so relative URLs in HTML fail fast instead of hanging, and allow setting `display_url` in `config.page_options` #144
 
 ### 3.1.0
 
