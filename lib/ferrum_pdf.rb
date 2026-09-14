@@ -95,9 +95,12 @@ module FerrumPdf
     def discard_unusable_browser
       return if @@browser.nil? || @@browser.client.nil? || !@@browser.contexts.nil?
 
-      @@browser.process&.stop
-      @@browser.client&.close
-      @@browser = nil
+      begin
+        @@browser.process&.stop
+        @@browser.client&.close
+      ensure
+        @@browser = nil
+      end
     end
 
     # Loads page into the browser to be used for rendering PDFs or screenshots

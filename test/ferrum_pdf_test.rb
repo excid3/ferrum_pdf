@@ -73,7 +73,9 @@ class FerrumPdfTest < ActiveSupport::TestCase
   test "replaces a browser whose contexts were never built" do
     browser = Ferrum::Browser.new
     pid = browser.process.pid
+    # Mirror a start that died in Contexts.new: its rescue stops Chrome but leaves the client assigned
     browser.instance_variable_set(:@contexts, nil)
+    browser.process.stop
     FerrumPdf.browser = browser
 
     FerrumPdf.with_browser do |yielded|
@@ -81,8 +83,6 @@ class FerrumPdfTest < ActiveSupport::TestCase
       assert_not_nil yielded.contexts
       assert_not_equal pid, yielded.process.pid
     end
-
-    assert_nil browser.process.pid
   end
 
   test "uses different browser when provided" do
