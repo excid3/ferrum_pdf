@@ -9,6 +9,7 @@ on:
 
 jobs:
   test:
+    if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/ci.yml
 
   push:
@@ -29,15 +30,24 @@ jobs:
           ruby-version: ruby
 
       - name: Update version
+        env:
+          VERSION: ${{ inputs.version }}
         run: |
-          sed -i 's/".*"/"${{ inputs.version }}"/' lib/ferrum_pdf/version.rb
+          sed -i "s/\".*\"/\"$VERSION\"/" lib/ferrum_pdf/version.rb
           bundle config set --local deployment 'false'
           bundle
           git config user.name 'GitHub Actions'
           git config user.email github-actions@github.com
           git add Gemfile.lock lib
-          git commit -m "Version bump"
+          # Skip the commit if the version was already bumped on main
+          git diff --cached --quiet || git commit -m "Version bump"
           git push
 
       # Release
       - uses: rubygems/release-gem@v1
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+        run: gh release create "v$VERSION" --generate-notes
