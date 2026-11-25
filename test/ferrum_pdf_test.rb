@@ -137,6 +137,10 @@ class FerrumPdfTest < ActiveSupport::TestCase
     assert FerrumPdf.render_pdf(html: html).start_with?("%PDF")
   end
 
+  test "wait_for_idle_options accepts duration" do
+    assert FerrumPdf.render_pdf(html: "<h1>Hello world</h1>", wait_for_idle_options: { duration: 0.1 }).start_with?("%PDF")
+  end
+
   test "javascript is enabled by default" do
     FerrumPdf.render_pdf(html: JAVASCRIPT_HTML) do |_browser, page|
       assert_equal "executed", page.at_css("#target").text
