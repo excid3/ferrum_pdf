@@ -12,3 +12,6 @@ if ActiveSupport::TestCase.respond_to?(:fixture_paths=)
   ActiveSupport::TestCase.file_fixture_path = File.expand_path("fixtures", __dir__) + "/files"
   ActiveSupport::TestCase.fixtures :all
 end
+
+# Chrome can take more than the default 10 seconds to start on CI runners
+FerrumPdf.config.process_timeout = 30
