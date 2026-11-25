@@ -1,5 +1,7 @@
 ### Unreleased
 
+### 3.2.1
+
 * Use Ferrum 0.21's `javascript=` and `wait_idle` when available, instead of the deprecated `disable_javascript` and `wait_for_idle` #172
 
 ### 3.2.0
