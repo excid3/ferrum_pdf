@@ -35,13 +35,13 @@ jobs:
         run: |
           sed -i "s/\".*\"/\"$VERSION\"/" lib/ferrum_pdf/version.rb
           bundle config set --local deployment 'false'
-          bundle
+          # Only the lockfile needs the new version, so resolve without installing anything
+          bundle lock
           git config user.name 'GitHub Actions'
           git config user.email github-actions@github.com
           git add Gemfile.lock lib
-          # Skip the commit if the version was already bumped on main
-          git diff --cached --quiet || git commit -m "Version bump"
-          git push
+          # The version may already be bumped on main; only commit when something changed
+          git diff --cached --quiet || { git commit -m "Version bump" && git push; }
 
       # Release
       - uses: rubygems/release-gem@v1
@@ -50,4 +50,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ inputs.version }}
-        run: gh release create "v$VERSION" --generate-notes
+        run: |
+          # Use this version's CHANGELOG section, with links made absolute so they work on the release page
+          awk -v heading="### $VERSION" '$0 == heading {found=1; next} found && /^### / {exit} found' CHANGELOG.md \
+            | sed "s|](\./|](https://github.com/$GITHUB_REPOSITORY/blob/main/|g" > release_notes.md
+          notes=(--notes-file release_notes.md)
+          [ -s release_notes.md ] || notes=(--generate-notes)
+          gh release create "v$VERSION" --verify-tag --title "v$VERSION" "${notes[@]}"
