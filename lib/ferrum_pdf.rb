@@ -123,7 +123,7 @@ module FerrumPdf
           page.set_viewport(**viewport) if viewport
 
           # Has to happen before #go_to, otherwise inline scripts have already run.
-          page.disable_javascript unless javascript_enabled
+          disable_javascript(page) unless javascript_enabled
 
           # Load content
           if html
@@ -143,7 +143,7 @@ module FerrumPdf
           end
 
           # Wait for everything to load
-          idle = page.network.wait_for_idle(**wait_for_idle_options)
+          idle = wait_for_idle(page.network, wait_for_idle_options)
           raise Ferrum::TimeoutError if timeout_if_open_connections && !idle
 
           yield browser, page
@@ -156,6 +156,23 @@ module FerrumPdf
         retry
       else
         raise
+      end
+    end
+
+    # Ferrum 0.21 deprecates Page#disable_javascript and Network#wait_for_idle, but older versions lack their replacements
+    def disable_javascript(page)
+      if page.respond_to?(:javascript=)
+        page.javascript = false
+      else
+        page.disable_javascript
+      end
+    end
+
+    def wait_for_idle(network, options)
+      if network.respond_to?(:wait_idle)
+        network.wait_idle(**options.transform_keys(duration: :interval))
+      else
+        network.wait_for_idle(**options)
       end
     end
   end
